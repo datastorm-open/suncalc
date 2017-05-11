@@ -98,12 +98,14 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
 
   load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
   
-  mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), ""), stringsAsFactors = FALSE)
+  mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), NA), stringsAsFactors = FALSE)
+  colnames(mat_res) <- available_var
   add_res <- lapply(1:nrow(data), function(x){
     ct$eval(paste0("var tmp_res = SunCalc.getTimes(new Date('", 
                    data[x, "date"], "'),", data[x, "lat"], ", ", data[x, "lon"], ");"))
     
-    mat_res[x, ] <<- unlist(ct$get("tmp_res"))
+    tmp_res <- unlist(ct$get("tmp_res"))
+    mat_res[x, names(tmp_res)] <<- tmp_res
     invisible()
   })
   
