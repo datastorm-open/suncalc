@@ -41,35 +41,16 @@
 #' 
 #' @export
 #' 
+#' @seealso \link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
+#' \link{getMoonPosition},\link{getSunlightPosition}
+#' 
 getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                              keep = c("rise", "set", "alwaysUp", "alwaysDown"), 
                              tz = "UTC"){
   
-  # data control
-  if(!is.null(data)){
-    if(!is.null(date) | !is.null(lat) | !is.null(lon)){
-      stop("Must use only 'data' argument, or 'date', 'lat', and 'lon' together. See examples")
-    }
-    
-    if(!isTRUE(all.equal("data.frame", class(data)))){
-      data <- data.frame(data)
-    }
-    
-  } else {
-    if(is.null(date) | is.null(lat) | is.null(lon)){
-      stop("Must use only 'data' argument, or 'date', 'lat', and 'lon' together. See examples")
-    }
-    
-    if(length(lat) > 1){
-      stop("'lat' must be a unique element. Use 'data' for multiple 'lat'")
-    }
-    if(length(lon) > 1){
-      stop("'lon' must be a unique element. Use 'data' for multiple 'lon'")
-    }
-    data <- data.frame(date = date, lat = lat, lon = lon)
-  }
   
-  stopifnot(all(c("date", "lat", "lon") %in% colnames(data)))
+  # data control
+  data <- .buildData(date = date, lat = lat, lon = lon, data = data)
   
   if(!"Date" %in% class(data$date)){
     stop("date must to be a Date object (class Date)")
@@ -89,7 +70,7 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   colnames(mat_res) <- available_var
   mat_res$alwaysUp <- FALSE
   mat_res$alwaysDown <- FALSE
-  add_res <- lapply(1:nrow(data), function(x){
+  add_res <- lapply(1:nrow(mat_res), function(x){
     ct$eval(paste0("var tmp_res = SunCalc.getMoonTimes(new Date('", 
                    data[x, "date"], "'),", data[x, "lat"], ", ", data[x, "lon"], ", true);"))
     
@@ -99,7 +80,6 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   })
   
   # format
-  colnames(mat_res) <- available_var
   mat_res <- mat_res[, keep]
   
   # tz

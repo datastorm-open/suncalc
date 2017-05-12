@@ -54,3 +54,7 @@ data <- data.frame(date = seq.Date(Sys.Date()-9, Sys.Date(), by = 1),
 getMoonTimes(data = data, tz = "CET")
       
 }
+\seealso{
+\link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
+\link{getMoonPosition},\link{getSunlightPosition}
+}
