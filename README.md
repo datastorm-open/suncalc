@@ -5,7 +5,9 @@
 # Installation
 
 ```` 
-# need pacakge "V8"
+# from cran
+install.packages("suncalc")
+# need package "V8"
 install.packages("V8")
 devtools::install_github("datastorm-open/suncalc") for developpement version
 ````
