@@ -80,7 +80,7 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   })
   
   # format
-  mat_res <- mat_res[, keep]
+  mat_res <- mat_res[, keep, drop = FALSE]
   
   # tz
   col_tz <- which(colnames(mat_res) %in% c("rise", "set"))

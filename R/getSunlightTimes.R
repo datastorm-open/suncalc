@@ -91,7 +91,7 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   })
   
   # format
-  mat_res <- mat_res[, keep]
+  mat_res <- mat_res[, keep, drop = FALSE]
   
   # tz
   ctrl_tz <- lapply(1:ncol(mat_res), function(x){

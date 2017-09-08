@@ -85,7 +85,7 @@ getSunlightPosition <- function(date = NULL, lat = NULL, lon = NULL, data = NULL
   })
   
   # format
-  mat_res <- mat_res[, keep]
+  mat_res <- mat_res[, keep, drop = FALSE]
   res <- cbind(data, mat_res)
   res
 }
