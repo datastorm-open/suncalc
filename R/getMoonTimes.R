@@ -56,6 +56,8 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
     stop("date must to be a Date object (class Date)")
   }
   
+  data$date <- paste0(data$date, " 12:00:00")
+  
   # variable control
   available_var <- c("rise", "set", "alwaysUp", "alwaysDown")
   stopifnot(all(keep %in% available_var))
