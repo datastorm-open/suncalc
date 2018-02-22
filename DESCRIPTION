@@ -1,6 +1,6 @@
 Package: suncalc
-Version: 0.3
-Date: 2017-10-04
+Version: 0.4
+Date: 2018-02-22
 Title: Compute Sun Position, Sunlight Phases, Moon Position and Lunar Phase
 Authors@R: c(
     person("Vladimir", "Agafonkin", role = c("aut", "cph"),

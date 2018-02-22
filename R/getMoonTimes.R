@@ -6,6 +6,7 @@
 #' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
 #' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
 #' @param tz : \code{character}. timezone of results
+#' @param inUTC : \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.
 #' 
 #' @return \code{data.frame}
 #' 
@@ -46,7 +47,7 @@
 #' 
 getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                              keep = c("rise", "set", "alwaysUp", "alwaysDown"), 
-                             tz = "UTC"){
+                             tz = "UTC", inUTC = FALSE){
   
   
   # data control
@@ -56,7 +57,7 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
     stop("date must to be a Date object (class Date)")
   }
   
-  data$date <- paste0(data$date, " 12:00:00")
+  # data$date <- paste0(data$date, " 12:00:00")
   
   # variable control
   available_var <- c("rise", "set", "alwaysUp", "alwaysDown")
@@ -74,7 +75,8 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   mat_res$alwaysDown <- FALSE
   add_res <- lapply(1:nrow(mat_res), function(x){
     ct$eval(paste0("var tmp_res = SunCalc.getMoonTimes(new Date('", 
-                   data[x, "date"], "'),", data[x, "lat"], ", ", data[x, "lon"], ", true);"))
+                   data[x, "date"], "'),", data[x, "lat"], ", ", 
+                   data[x, "lon"], ",", tolower(inUTC), ");"))
     
     tmp_res <- unlist(ct$get("tmp_res"))
     mat_res[x, names(tmp_res)] <<- tmp_res

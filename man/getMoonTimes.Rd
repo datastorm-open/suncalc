@@ -5,7 +5,8 @@
 \title{Get Moon times}
 \usage{
 getMoonTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
-  keep = c("rise", "set", "alwaysUp", "alwaysDown"), tz = "UTC")
+  keep = c("rise", "set", "alwaysUp", "alwaysDown"), tz = "UTC",
+  inUTC = FALSE)
 }
 \arguments{
 \item{date}{: \code{Date}. Single or multiple Date. YYYY-MM-DD}
@@ -19,6 +20,8 @@ getMoonTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
 \item{keep}{: \code{character}. Vector of variables to keep. See \code{Details}}
 
 \item{tz}{: \code{character}. timezone of results}
+
+\item{inUTC}{: \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.}
 }
 \value{
 \code{data.frame}
