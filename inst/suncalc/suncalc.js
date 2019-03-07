@@ -15,7 +15,8 @@ var PI   = Math.PI,
     asin = Math.asin,
     atan = Math.atan2,
     acos = Math.acos,
-    rad  = PI / 180;
+    rad  = PI / 180,
+    d_test = 1;
 
 // sun calculations are based on http://aa.quae.nl/en/reken/zonpositie.html formulas
 
@@ -79,16 +80,20 @@ function sunCoords(d) {
 var SunCalc = {};
 
 
+
 // calculates sun position for a given date and latitude/longitude
 
 SunCalc.getPosition = function (date, lat, lng) {
 
     var lw  = rad * -lng,
         phi = rad * lat,
-        d   = toDays(date),
+        d   = toDays(date);
+        
 
         c  = sunCoords(d),
         H  = siderealTime(d, lw) - c.ra;
+        
+        
 
     return {
         azimuth: azimuth(H, phi, c.dec),
@@ -232,6 +237,10 @@ SunCalc.getMoonIllumination = function (date) {
         inc = atan(sdist * sin(phi), m.dist - sdist * cos(phi)),
         angle = atan(cos(s.dec) * sin(s.ra - m.ra), sin(s.dec) * cos(m.dec) -
                 cos(s.dec) * sin(m.dec) * cos(s.ra - m.ra));
+                
+              
+                
+    d_test = toDays(date);
 
     return {
         fraction: (1 + cos(inc)) / 2,

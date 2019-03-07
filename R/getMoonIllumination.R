@@ -78,7 +78,7 @@ getMoonIllumination <- function(date = Sys.Date(),
     mat_res[x, names(tmp_res)] <<- tmp_res
     invisible()
   })
-  
+  print(ct$get("d_test"))
   # format
   mat_res <- mat_res[, c("date", keep)]
   

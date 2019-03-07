@@ -6,8 +6,8 @@
 \usage{
 getSunlightTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
   keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd",
-  "sunsetStart", "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd",
-  "night", "goldenHourEnd", "goldenHour"), tz = "UTC")
+  "sunsetStart", "dawn", "dusk", "nauticalDawn", "nauticalDusk",
+  "nightEnd", "night", "goldenHourEnd", "goldenHour"), tz = "UTC")
 }
 \arguments{
 \item{date}{: \code{Date}. Single or multiple Date. YYYY-MM-DD}
