@@ -57,7 +57,7 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
     stop("date must to be a Date object (class Date)")
   }
   
-  # data$date <- paste0(data$date, " 12:00:00")
+  data$date <- paste0(data$date, " 12:00:00")
   
   # variable control
   available_var <- c("rise", "set", "alwaysUp", "alwaysDown")
@@ -67,7 +67,7 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   # call suncalc.js
   ct <- v8()
   
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
+  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalcjs"))
   
   mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), NA), stringsAsFactors = FALSE)
   colnames(mat_res) <- available_var

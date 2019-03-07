@@ -72,7 +72,7 @@ getMoonPosition <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   # call suncalc.js
   ct <- v8()
   
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
+  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalcjs"))
   
   mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), NA), 
                                          stringsAsFactors = FALSE)

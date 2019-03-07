@@ -64,7 +64,7 @@ getMoonIllumination <- function(date = Sys.Date(),
   # call suncalc.js
   ct <- v8()
   
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
+  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalcjs"))
   
   mat_res <- cbind.data.frame(date = date, 
                               data.frame(matrix(nrow = length(date), ncol = length(available_var), NA), 
