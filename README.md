@@ -3,15 +3,13 @@
 
 # suncalc
 
-### R interface to suncalc.js library, part of the SunCalc.net project <http://suncalc.net>, for calculating sun position, sunlight phases (times for sunrise, sunset, dusk, etc.), moon position and lunar phase for the given location and time.
+### R implementation for calculating sun position, sunlight phases (times for sunrise, sunset, dusk, etc.), moon position and lunar phase for the given location and time. Most calculations are based on the formulas given in Astronomy Answers articles about position of the sun and the planets : <https://www.aa.quae.nl/en/reken/zonpositie.html>
 
 # Installation
 
 ```` 
 # from cran
 install.packages("suncalc")
-# need package "V8"
-install.packages("V8")
 devtools::install_github("datastorm-open/suncalc") for developpement version
 ````
 
@@ -23,13 +21,7 @@ require(suncalc)
 getSunlightTimes(date = Sys.Date(), lat = 50.1, lon = 1.83, tz = "CET")
 ````
 
-# About Suncalc.js
-
-SunCalc is a tiny BSD-licensed JavaScript library for calculating sun position,
-sunlight phases (times for sunrise, sunset, dusk, etc.),
-moon position and lunar phase for the given location and time,
-created by [Vladimir Agafonkin](http://agafonkin.com/en) ([@mourner](https://github.com/mourner))
-as a part of the [SunCalc.net project](http://suncalc.net).
+# About suncalc
 
 Most calculations are based on the formulas given in the excellent Astronomy Answers articles
 about [position of the sun](http://aa.quae.nl/en/reken/zonpositie.html)

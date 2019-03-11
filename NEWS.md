@@ -1,3 +1,8 @@
+# suncalc 0.5 (2019-03-11)
+
+## Major changes 
+* Full R implementation of all functions
+
 # suncalc 0.4 (2018-02-22)
 
 ## Bugfixes
