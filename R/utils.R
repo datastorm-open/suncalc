@@ -37,10 +37,7 @@
     if(is.null(attr(date, "tzone"))){
       attr(request_date, "tzone") <- "UTC"
       warning("'date' is convert to 'UTC' for request using 'attr(date, 'tzone') <- 'UTC'")
-    } else if(attr(date, "tzone") != "UTC"){
-      attr(request_date, "tzone") <- "UTC"
-      warning("'date' is convert to 'UTC' for request using 'attr(date, 'tzone') <- 'UTC'")
-    }
+    } 
   }
   request_date
 }
