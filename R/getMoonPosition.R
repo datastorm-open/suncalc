@@ -62,7 +62,7 @@
 #' \link{getMoonPosition},\link{getSunlightPosition}
 #' 
 getMoonPosition <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
-                                keep = c("altitude", "azimuth", "distance", "parallacticAngle")){
+                            keep = c("altitude", "azimuth", "distance", "parallacticAngle")){
   
   # data control
   data <- .buildData(date = date, lat = lat, lon = lon, data = data)

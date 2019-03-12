@@ -112,7 +112,7 @@
 }
 
 .hourAngle <- function(h, phi, d) {
-  return(acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d))))
+  return(suppressWarnings(acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d)))))
 }
 
 # returns set time for the given sun .altitude
@@ -306,12 +306,12 @@
   
   if (length(date) > 1) {
     # go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
-    h_shift <- seq(0L, 24L, 2L)
+    h_shift <- seq(1L, 23L, 2L)
     h1 <- sapply(h_shift, function(i) .getMoonPosition(.hourslater(t, i), lat, lng)$altitude - hc)
     h2 <- sapply(h_shift, function(i) .getMoonPosition(.hourslater(t, i + 1), lat, lng)$altitude - hc)
     h0 <- matrix(NA, nrow(h1), ncol(h1))
     h0[, 1] <- .getMoonPosition(t, lat, lng)$altitude - hc
-    h0[, 2:ncol(h0)] <- h2[,1:(ncol(h2) - 1)] 
+    h0[, 2:ncol(h0)] <- h2[, 1:(ncol(h2) - 1)] 
     
     a <- (h0 + h2)/2 - h1
     b <- (h2 - h0)/2
@@ -355,12 +355,15 @@
     rise <- rise[rise_idx]
     set <- set[set_idx]
     
+    ye <- ye[, ncol(ye)]
+    
   } else {
     h0 <- .getMoonPosition(t, lat, lng)$altitude - hc
     rise <- NULL
     set <- NULL
+    
     # go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
-    for (i in seq(0,24,2)) {
+    for (i in seq(1,23,2)) {
       h1 <- .getMoonPosition(.hourslater(t, i), lat, lng)$altitude - hc
       h2 <- .getMoonPosition(.hourslater(t, i + 1), lat, lng)$altitude - hc
       
@@ -390,15 +393,17 @@
       }
       
       if (!is.null(rise) && !is.null(set)) break
-      
       h0 <- h2
     }
+    
+    rise <- ifelse(is.null(rise), NA, rise)
+    set <- ifelse(is.null(set), NA, set)
   }
   
   return(list(rise = .hourslater(t, rise), 
               set = .hourslater(t, set), 
-              alwaysUp = ifelse(is.na(rise), TRUE, FALSE),
-              alwaysDown = ifelse(is.na(set), TRUE, FALSE)
+              alwaysUp = ifelse(is.na(rise) & is.na(set) & ye > 0, TRUE, FALSE),
+              alwaysDown = ifelse(is.na(rise) & is.na(set) & ye <= 0, TRUE, FALSE)
   )
   )
 }

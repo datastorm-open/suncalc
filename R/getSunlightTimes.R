@@ -70,7 +70,7 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   # data control
   data <- .buildData(date = date, lat = lat, lon = lon, data = data)
   
-  if(!"Date" %in% class(data$date)){
+  if (!"Date" %in% class(data$date)) {
     stop("date must to be a Date object (class Date)")
   }
 
@@ -85,13 +85,11 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
     .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
     as.data.frame()
-  
-  if(!is.null(tz) && (tz != "UTC")) {
-    invisible(lapply(colnames(data),
+    
+    invisible(lapply(setdiff(colnames(data), c("date", "lat", "lon")),
                      function(x) attr(data[[x]], "tzone") <<- tz)
               )
     
-  }
   # TODO demander à benoit pourquoi il change le tz
   
   return(data)
