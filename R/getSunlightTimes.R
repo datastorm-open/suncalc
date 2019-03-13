@@ -48,7 +48,12 @@
 #' getSunlightTimes(data = data, 
 #'   keep = c("sunrise", "sunriseEnd", "sunset", "sunsetStart"), tz = "CET")
 #'       
-#' @import V8
+#' @rawNamespace import(data.table, except = hour)
+#' @import magrittr 
+#' @importFrom lubridate as_datetime
+#' @importFrom lubridate hours
+#' @importFrom lubridate seconds
+#' @importFrom lubridate hour
 #' 
 #' @export
 #' 
@@ -57,55 +62,35 @@
 #' 
 getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
            keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
-                    "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night", "goldenHourEnd", "goldenHour"), 
+                    "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
+                    "goldenHourEnd", "goldenHour"), 
            tz = "UTC"){
   
   
   # data control
   data <- .buildData(date = date, lat = lat, lon = lon, data = data)
   
-  if(!"Date" %in% class(data$date)){
+  if (!"Date" %in% class(data$date)) {
     stop("date must to be a Date object (class Date)")
   }
 
-  data$date <- paste0(data$date, " 12:00:00")
-  
   # variable control
   available_var <- c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
-                     "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night", "goldenHourEnd", "goldenHour")
+                     "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
+                     "goldenHourEnd", "goldenHour")
   stopifnot(all(keep %in% available_var))
-
   
-  # call suncalc.js
-  ct <- v8()
-
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
-  
-  mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), NA), stringsAsFactors = FALSE)
-  colnames(mat_res) <- available_var
-  add_res <- lapply(1:nrow(mat_res), function(x){
-    ct$eval(paste0("var tmp_res = SunCalc.getTimes(new Date('", 
-                   data[x, "date"], "'),", data[x, "lat"], ", ", data[x, "lon"], ");"))
+  data <- data %>% 
+    .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
+    .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
+    .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+    as.data.frame()
     
-    tmp_res <- unlist(ct$get("tmp_res"))
-    mat_res[x, names(tmp_res)] <<- tmp_res
-    invisible()
-  })
+    invisible(lapply(setdiff(colnames(data), c("date", "lat", "lon")),
+                     function(x) attr(data[[x]], "tzone") <<- tz)
+              )
+    
+  # TODO demander à benoit pourquoi il change le tz
   
-  # format
-  mat_res <- mat_res[, keep, drop = FALSE]
-  
-  # tz
-  ctrl_tz <- lapply(1:ncol(mat_res), function(x){
-    mat_res[, x] <<- as.POSIXct(mat_res[, x], format = "%Y-%m-%dT%H:%M:%S.", tz = "UTC")
-    if(!is.null(tz)){
-      if(tz != "UTC"){
-        attr(mat_res[, x], "tzone") <<- tz
-      }
-    }
-    invisible()
-  })
-  
-  res <- cbind(data, mat_res)
-  res
+  return(data)
 }
