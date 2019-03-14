@@ -11,7 +11,7 @@
   dayS <- 60 * 60 * 24
   J1970 <- 2440588
   date <- as.POSIXct((j + 0.5 - J1970) * dayS , as.POSIXct('1970-01-01', tz = 'UTC'), tz = 'UTC') 
-  return(date)
+  return(lubridate::floor_date(date))
 }
 
 .toDays <- function(date) {
@@ -228,8 +228,7 @@
 
 .hourslater <- function(date, h) {
   #return(date + lubridate::hours(h))
-  return(date + lubridate::milliseconds(h*3600*(10**3)))
-  
+  return(lubridate::floor_date(date + lubridate::milliseconds(h*3600*(10**3))))
 }
 
 # calculations for moon rise/set times are based on http:#www.stargazing.net/kepler/moonrise.html article
