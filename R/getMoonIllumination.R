@@ -44,6 +44,10 @@
 #' getMoonIllumination(date = as.POSIXct("2017-05-12 00:00:00", tz = "UTC"))
 #' getMoonIllumination(date = as.POSIXct("2017-05-12 02:00:00", tz = "CET"))
 #' 
+#' date <- seq(ISOdate(2009,1,1), ISOdate(2010,1,1), "hours")
+#' date_cet <- date
+#' attr(date_cet, "tzone") <- "CET"
+#' res <- getMoonIllumination(date = date_cet))
 #'       
 #' @rawNamespace import(data.table, except = hour)
 #' @import magrittr 
@@ -66,10 +70,10 @@ getMoonIllumination <- function(date = Sys.Date(),
   
   # tz and date control
   requestDate <- .buildRequestDate(date)
-  data <- data.table(date = requestDate)
+  data <- data.table(date = date, requestDate = requestDate)
   
   data <- data %>% 
-    .[, (available_var) := .getMoonIllumination(date = date)] %>% 
+    .[, (available_var) := .getMoonIllumination(date = requestDate)] %>% 
     .[, c("date", keep), with = FALSE] %>% 
     as.data.frame()
   

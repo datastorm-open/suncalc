@@ -67,12 +67,13 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   stopifnot(all(keep %in% available_var))
   
   data <- data %>%
-    # .[, date := as.Date(date)] %>%
+    .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
     .[, (available_var) := .getMoonTimes(date = as.Date(date), lat = lat, lng = lon, inUTC = inUTC)] %>%
-    .[, c("date", "lat", "lon", keep), with = FALSE] %>%
+    .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+    .[, date := as.Date(date)] %>% 
     as.data.frame()
   
-  if (!is.null(tz) && (tz != "UTC")) {
+  if (!is.null(tz)) {
     invisible(lapply(c("rise", "set"),
                      function(x) attr(data[[x]], "tzone") <<- tz)
     )

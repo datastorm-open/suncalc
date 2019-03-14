@@ -72,11 +72,10 @@ getMoonPosition <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   stopifnot(all(keep %in% available_var))
   
   # tz and date control
-  requestDate <- .buildRequestDate(data$date)
-  data$date <- requestDate
+  data$requestDate <- .buildRequestDate(data$date)
   
   data <- data %>% 
-    .[, (available_var) := .getMoonPosition(date = date, lat = lat, lng = lon)] %>% 
+    .[, (available_var) := .getMoonPosition(date = requestDate, lat = lat, lng = lon)] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
     as.data.frame()
   

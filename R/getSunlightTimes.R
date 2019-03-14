@@ -84,13 +84,12 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
     .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
     .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+    .[, date := as.Date(date)] %>% 
     as.data.frame()
     
     invisible(lapply(setdiff(colnames(data), c("date", "lat", "lon")),
                      function(x) attr(data[[x]], "tzone") <<- tz)
               )
-    
-  # TODO demander à benoit pourquoi il change le tz
-  
+
   return(data)
 }
