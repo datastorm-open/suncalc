@@ -5,9 +5,10 @@ remotes::install_github(repo = "AchrafElmar/suncalc", ref = "fullr_optimized", u
 # V0.4
 remotes::install_github(repo = "datastorm-open/suncalc", ref = "suncalc_js", upgrade = F)
 
-###############################
-## getSunlightTimes function ##
-###############################
+## getSunlightTimes function ----
+
+suncalc::getSunlightTimes(date = as.Date("2018-05-04"), lat = -90, lon = -160, tz = "CET")
+suncalcjs::getSunlightTimes(date = as.Date("2018-05-04"), lat = -90, lon = -160, tz = "CET")
 
 # one date
 new <- suncalc::getSunlightTimes(date = Sys.Date(), lat = 50.1, lon = 1.83, tz = "CET")
@@ -101,9 +102,8 @@ ctrl <- lapply(v_tz, function(tz){
 })
 
 
-##################################
-## getSunlightPosition function ##
-##################################
+## getSunlightPosition function ----
+
 
 # one date
 new <- suncalc::getSunlightPosition(date = Sys.Date(), lat = 50.1, lon = 1.83)
@@ -171,9 +171,9 @@ system.time(new <- suncalc::getSunlightPosition(data = grid))
 system.time(old <- suncalcjs::getSunlightPosition(data = grid))
 stopifnot(all.equal(old, new))
 
-###########################
-## getMoonTimes function ##
-###########################
+
+## getMoonTimes function ----
+
 
 # one date
 new <- suncalc::getMoonTimes(date = Sys.Date() - 1, lat = 47.21, lon = -1.557, tz = "CET")
@@ -231,7 +231,7 @@ stopifnot(all.equal(old[, -1], new[, -1]))
 
 # grid lat lon tz
 grid <- expand.grid(
-  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 50),
+  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 10),
   lat = seq(-90, 90, by = 10), 
   lon = seq(-180, 180, by = 20)
 )
@@ -249,24 +249,24 @@ ctrl <- lapply(v_tz, function(tz){
   
   # pour verifier la difference numerique
   lapply(colnames(old)[-c(1:3)], function(x){
-    stopifnot( all(as.character(old[[x]]) == as.character(new[[x]])))
+    stopifnot( all(as.character(old[[x]]) == as.character(new[[x]]), na.rm = TRUE))
   })
   
   x <- "rise"
   x <- "set"
   ind_diff <- which(as.character(old[[x]]) != as.character(new[[x]]))
-  
+
   View(new[ind_diff, ])
   View(old[ind_diff, ])
-  
-  View(new[new$date != as.Date(new$rise), ])
-  View(old[old$date != as.Date(old$rise), ])
-  head(old[as.character(old[[x]]) != as.character(new[[x]]),])
-  head(new[as.character(old[[x]]) != as.character(new[[x]]),])
+  # 
+  # View(new[new$date != as.Date(new$rise), ])
+  # View(old[old$date != as.Date(old$rise), ])
+  # head(old[as.character(old[[x]]) != as.character(new[[x]]),])
+  # head(new[as.character(old[[x]]) != as.character(new[[x]]),])
 })
-##############################
-## getMoonPosition function ##
-##############################
+
+## getMoonPosition function ----
+
 
 
 # one date
@@ -334,10 +334,8 @@ system.time(new <-  suncalc::getMoonPosition(data = grid))
 system.time(old <- suncalcjs::getMoonPosition(data = grid))
 stopifnot(all.equal(old, new))
 
-##################################
-## getMoonIllumination function ##
-##################################
 
+## getMoonIllumination function ----
 
 # one date
 new <- suncalc::getMoonIllumination(date = Sys.Date())

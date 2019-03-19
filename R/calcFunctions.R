@@ -3,7 +3,8 @@
 .toJulian <- function(date) {
   dayS <- 60 * 60 * 24
   J1970 <- 2440588
-  nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = 'UTC'))
+  nb_ms_from_J1970 <- as.numeric(as.POSIXct(date))
+  # nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = 'UTC'))
   return((nb_ms_from_J1970 / dayS) - 0.5 + J1970)
 }
 
@@ -108,6 +109,8 @@
 
 .solarTransitJ <- function(ds, m, l) {
   J2000 <- 2451545
+  # print(ds)
+  # print(J2000 + ds + 0.0053 * sin(m) - 0.0069 * sin(2 * l))
   return(J2000 + ds + 0.0053 * sin(m) - 0.0069 * sin(2 * l)) 
 }
 
