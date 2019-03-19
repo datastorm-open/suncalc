@@ -3,6 +3,8 @@
 .toJulian <- function(date) {
   dayS <- 60 * 60 * 24
   J1970 <- 2440588
+  print(date)
+  print(as.POSIXct(date))
   nb_ms_from_J1970 <- as.numeric(as.POSIXct(date))
   # nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = 'UTC'))
   return((nb_ms_from_J1970 / dayS) - 0.5 + J1970)
@@ -141,6 +143,14 @@
   dec <- .declination(L, 0)
   
   Jnoon <- .solarTransitJ(ds, M, L)
+  
+  message("jnoon : ", Jnoon)
+  message("d : ", d)
+  message("n : ", n)
+  message("ds : ", ds)
+  message("M : ", M)
+  message("L : ", L)
+  message("dec : ", dec)
   
   available_var <- c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
                      "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
