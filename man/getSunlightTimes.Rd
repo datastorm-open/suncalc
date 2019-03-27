@@ -6,8 +6,8 @@
 \usage{
 getSunlightTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
   keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd",
-  "sunsetStart", "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd",
-  "night", "goldenHourEnd", "goldenHour"), tz = "UTC")
+  "sunsetStart", "dawn", "dusk", "nauticalDawn", "nauticalDusk",
+  "nightEnd", "night", "goldenHourEnd", "goldenHour"), tz = "UTC")
 }
 \arguments{
 \item{date}{: \code{Date}. Single or multiple Date. YYYY-MM-DD}
@@ -20,7 +20,7 @@ getSunlightTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
 
 \item{keep}{: \code{character}. Vector of variables to keep. See \code{Details}}
 
-\item{tz}{: \code{character}. timezone of results}
+\item{tz}{: \code{character}. Timezone of results}
 }
 \value{
 \code{data.frame}
@@ -29,7 +29,7 @@ getSunlightTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
 Get Sunlight times
 }
 \details{
-Availabled variables are :
+Available variables are :
 
 \itemize{
   \item{"sunrise"}{ : sunrise (top edge of the sun appears on the horizon)}

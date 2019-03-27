@@ -19,7 +19,7 @@ getMoonTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
 
 \item{keep}{: \code{character}. Vector of variables to keep. See \code{Details}}
 
-\item{tz}{: \code{character}. timezone of results}
+\item{tz}{: \code{character}. Timezone of results}
 
 \item{inUTC}{: \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.}
 }
@@ -30,7 +30,7 @@ getMoonTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
 Get Moon times
 }
 \details{
-Availabled variables are :
+Available variables are :
 
 \itemize{
   \item{"rise"}{ : \code{Date}. moonrise time}
