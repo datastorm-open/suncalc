@@ -3,10 +3,7 @@
 .toJulian <- function(date) {
   dayS <- 60 * 60 * 24
   J1970 <- 2440588
-  print(date)
-  print(as.POSIXct(date))
-  nb_ms_from_J1970 <- as.numeric(as.POSIXct(date))
-  # nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = 'UTC'))
+  nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = "UTC"))
   return((nb_ms_from_J1970 / dayS) - 0.5 + J1970)
 }
 
@@ -111,8 +108,6 @@
 
 .solarTransitJ <- function(ds, m, l) {
   J2000 <- 2451545
-  # print(ds)
-  # print(J2000 + ds + 0.0053 * sin(m) - 0.0069 * sin(2 * l))
   return(J2000 + ds + 0.0053 * sin(m) - 0.0069 * sin(2 * l)) 
 }
 
@@ -143,14 +138,6 @@
   dec <- .declination(L, 0)
   
   Jnoon <- .solarTransitJ(ds, M, L)
-  
-  message("jnoon : ", Jnoon)
-  message("d : ", d)
-  message("n : ", n)
-  message("ds : ", ds)
-  message("M : ", M)
-  message("L : ", L)
-  message("dec : ", dec)
   
   available_var <- c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
                      "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
@@ -241,7 +228,7 @@
 
 .hourslater <- function(date, h) {
   #return(date + lubridate::hours(h))
-  return(lubridate::floor_date(date + lubridate::milliseconds(h*3600*(10**3))))
+  return(lubridate::floor_date(date + as.numeric(lubridate::milliseconds(h*3600*(10**3)))))
 }
 
 # calculations for moon rise/set times are based on http:#www.stargazing.net/kepler/moonrise.html article
@@ -309,7 +296,7 @@
   if (inUTC) {
     t <- as.POSIXct(as.character(date), tz = 'UTC')
   } else {
-    t <- as.POSIXct(date)
+    t <- as.POSIXct(date, tz = Sys.timezone())
   }
   
   lubridate::hour(t) <- 0
@@ -333,7 +320,6 @@
     suppressWarnings(x1 <- (-b / (2 * a)) - (sqrt(b * b - 4 * a * h1) / (2 * abs(a))))
     suppressWarnings(x2 <- (-b / (2 * a)) + (sqrt(b * b - 4 * a * h1) / (2 * abs(a))))
     
-    
     idx <- which(abs(x1) <= 1, arr.ind = TRUE)
     roots <- matrix(0L, nrow(h0), ncol(h0))
     roots[idx] <- roots[idx] + 1L
@@ -343,8 +329,8 @@
     
     idx <- which(x1 < -1, arr.ind = TRUE)
     x1[idx] <- x2[idx]
-    
-    roots_idx <- apply(roots, 1, function(x) which(x > 0)[1])
+
+    # roots_idx <- apply(roots, 1, function(x) which(x > 0)[1])
     
     rise <- matrix(NA_real_, nrow(h0), ncol(h0))
     set <- matrix(NA_real_, nrow(h0), ncol(h0))
@@ -362,10 +348,18 @@
     rise[idx] <- (x1 + h_shift[col(x1)])[idx]
     set[idx] <- (x2 + h_shift[col(x1)])[idx]
     
-    rise_idx <- cbind(1:length(t), apply(rise, 1, function(i) which(!is.na(i))[1]))
-    set_idx <- cbind(1:length(t), apply(set, 1, function(i) which(!is.na(i))[1]))
-    rise <- rise[rise_idx]
-    set <- set[set_idx]
+    ind_full_idx <-  sapply(1:nrow(rise), function(i) which(!is.na(rise[i, ]) & !is.na(set[i, ]))[1])
+    ind_full_idx_nona <- which(!is.na(ind_full_idx))
+    
+    rise_idx <- apply(rise, 1, function(i) which(!is.na(i))[1])
+    set_idx <- apply(set, 1, function(i) which(!is.na(i))[1])
+    
+    if(length(ind_full_idx_nona) > 0){
+      rise_idx[ind_full_idx_nona] <- ind_full_idx[ind_full_idx_nona]
+      set_idx[ind_full_idx_nona] <- ind_full_idx[ind_full_idx_nona]
+    }
+    rise <- rise[cbind(1:length(t), rise_idx)]
+    set <- set[cbind(1:length(t), set_idx)]
     
     ye <- ye[, ncol(ye)]
     
@@ -376,6 +370,7 @@
     
     # go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
     for (i in seq(1,23,2)) {
+
       h1 <- .getMoonPosition(.hourslater(t, i), lat, lng)$altitude - hc
       h2 <- .getMoonPosition(.hourslater(t, i + 1), lat, lng)$altitude - hc
       
@@ -385,9 +380,10 @@
       ye <- (a * xe + b) * xe + h1
       d <- b * b - 4 * a * h1
       roots <- 0
-      
+
       if (d >= 0) {
         dx <- sqrt(d) / (abs(a) * 2)
+
         x1 <- xe - dx
         x2 <- xe + dx
         if (abs(x1) <= 1) roots <- roots + 1

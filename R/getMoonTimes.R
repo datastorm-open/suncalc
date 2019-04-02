@@ -5,14 +5,14 @@
 #' @param lon : \code{numeric}. Single longitude
 #' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
 #' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
-#' @param tz : \code{character}. timezone of results
+#' @param tz : \code{character}. Timezone of results
 #' @param inUTC : \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.
 #' 
 #' @return \code{data.frame}
 #' 
 #' @details 
 #' 
-#' Availabled variables are :
+#' Available variables are :
 #' 
 #' \itemize{
 #'   \item{"rise"}{ : \code{Date}. moonrise time}
@@ -67,8 +67,9 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   stopifnot(all(keep %in% available_var))
   
   data <- data %>%
-    .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
-    .[, (available_var) := .getMoonTimes(date = as.Date(date), lat = lat, lng = lon, inUTC = inUTC)] %>%
+    # .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
+    # .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(11), Sys.timezone())] %>%
+    .[, (available_var) := .getMoonTimes(date = date, lat = lat, lng = lon, inUTC = inUTC)] %>%
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
     .[, date := as.Date(date)] %>% 
     as.data.frame()

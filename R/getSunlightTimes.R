@@ -5,13 +5,13 @@
 #' @param lon : \code{numeric}. Single longitude
 #' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
 #' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
-#' @param tz : \code{character}. timezone of results
+#' @param tz : \code{character}. Timezone of results
 #' 
 #' @return \code{data.frame}
 #' 
 #' @details 
 #' 
-#' Availabled variables are :
+#' Available variables are :
 #' 
 #' \itemize{
 #'   \item{"sunrise"}{ : sunrise (top edge of the sun appears on the horizon)}
@@ -80,8 +80,9 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                      "goldenHourEnd", "goldenHour")
   stopifnot(all(keep %in% available_var))
   
+  # date = lubridate::force_tz(lubridate::as_datetime(Sys.Date()) + lubridate::hours(12), Sys.timezone())
   data <- data %>% 
-    .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
+    .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), Sys.timezone())] %>% 
     .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
     .[, date := as.Date(date)] %>% 

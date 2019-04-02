@@ -1,14 +1,11 @@
 ## Install packages for testing 
 
-# Optimized version (V0.5)
-remotes::install_github(repo = "AchrafElmar/suncalc", ref = "fullr_optimized", upgrade = F)
-# V0.4
-remotes::install_github(repo = "datastorm-open/suncalc", ref = "suncalc_js", upgrade = F)
+# # Optimized version (V0.5)
+# remotes::install_github(repo = "AchrafElmar/suncalc", ref = "fullr_optimized", upgrade = F)
+# # V0.4
+# remotes::install_github(repo = "datastorm-open/suncalc", ref = "suncalc_js", upgrade = F)
 
 ## getSunlightTimes function ----
-
-suncalc::getSunlightTimes(date = as.Date("2018-05-04"), lat = -90, lon = -160, tz = "CET")
-suncalcjs::getSunlightTimes(date = as.Date("2018-05-04"), lat = -90, lon = -160, tz = "CET")
 
 # one date
 new <- suncalc::getSunlightTimes(date = Sys.Date(), lat = 50.1, lon = 1.83, tz = "CET")
@@ -60,9 +57,9 @@ stopifnot(all.equal(old[, -1], new[, -1], check.attributes = F))
 
 # grid lat lon tz
 grid <- expand.grid(
-  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 50),
+  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 20),
   lat = seq(-90, 90, by = 10), 
-  lon = seq(-180, 180, by = 20)
+  lon = seq(-180, 180, by = 10)
 )
 
 v_tz <-  c("UTC", "CET", "Australia/Perth", "Africa/Johannesburg", "America/Bahia", "Asia/Bahrain", "Europe/Moscow")
@@ -76,29 +73,29 @@ ctrl <- lapply(v_tz, function(tz){
   old$date <- as.Date(old$date)
   stopifnot(all.equal(old, new))
   
-
-  # pour verifier la difference numerique
-  lapply(colnames(old)[-c(1:3)], function(x){
-    print(x)
-    stopifnot( all(as.character(old[[x]]) == as.character(new[[x]])))
-  })
-  
-  x <- "solarNoon"
-  
-  ind_diff <- which(as.character(old[[x]]) != as.character(new[[x]]))
-  
-  View(new[ind_diff, ])
-  View(old[ind_diff, ])
-  
-  ind_diff
-  
-  old[old$lat == -70 & old$lon == -160,]
-  new[new$lat == -70 & new$lon == -160,]
-  
-  View(new[new$date != as.Date(new$solarNoon), ])
-  View(old[old$date != as.Date(old$solarNoon), ])
-  head(old[as.character(old[[x]]) != as.character(new[[x]]),])
-  head(new[as.character(old[[x]]) != as.character(new[[x]]),])
+# 
+#   # pour verifier la difference numerique
+#   lapply(colnames(old)[-c(1:3)], function(x){
+#     print(x)
+#     stopifnot( all(as.character(old[[x]]) == as.character(new[[x]])))
+#   })
+#   
+#   x <- "solarNoon"
+#   
+#   ind_diff <- which(as.character(old[[x]]) != as.character(new[[x]]))
+#   
+#   View(new[ind_diff, ])
+#   View(old[ind_diff, ])
+#   
+#   ind_diff
+#   
+#   old[old$lat == -70 & old$lon == -160,]
+#   new[new$lat == -70 & new$lon == -160,]
+#   
+#   View(new[new$date != as.Date(new$solarNoon), ])
+#   View(old[old$date != as.Date(old$solarNoon), ])
+#   head(old[as.character(old[[x]]) != as.character(new[[x]]),])
+#   head(new[as.character(old[[x]]) != as.character(new[[x]]),])
 })
 
 
@@ -164,7 +161,7 @@ stopifnot(all.equal(old, new))
 grid <- expand.grid(
   date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 10),
   lat = seq(-90, 90, by = 10), 
-  lon = seq(-180, 180, by = 20)
+  lon = seq(-180, 180, by = 10)
 )
 
 system.time(new <- suncalc::getSunlightPosition(data = grid))
@@ -184,11 +181,6 @@ stopifnot(all.equal(old[, -1], new[, -1]))
 new <- suncalc::getMoonTimes(date = Sys.Date() - 1, lat = 47.21, lon = -1.557, tz = "UTC")
 old <- suncalcjs::getMoonTimes(date = Sys.Date() - 1, lat = 47.21, lon = -1.557, tz = "UTC")
 stopifnot(all.equal(old[, -1], new[, -1]))
-
-# suncalcjs : set = NA for 2019-03-11 12:00:00
-# new <- suncalc::getMoonTimes(date = Sys.Date() , lat = 47.21, lon = -1.557, tz = "CET")
-# old <- suncalcjs::getMoonTimes(date = Sys.Date() , lat = 47.21, lon = -1.557, tz = "CET")
-# stopifnot(all.equal(old[, -1], new[, -1]))
 
 # multiple date + subset
 new <- suncalc::getMoonTimes(date = seq.Date(Sys.Date() - 9, Sys.Date(), by = 1), 
@@ -231,14 +223,12 @@ stopifnot(all.equal(old[, -1], new[, -1]))
 
 # grid lat lon tz
 grid <- expand.grid(
-  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 10),
+  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 15),
   lat = seq(-90, 90, by = 10), 
-  lon = seq(-180, 180, by = 20)
+  lon = seq(-180, 180, by = 10)
 )
 
 v_tz <-  c("UTC", "CET", "Australia/Perth", "Africa/Johannesburg", "America/Bahia", "Asia/Bahrain", "Europe/Moscow")
-
-tz <- "UTC"
 
 ctrl <- lapply(v_tz, function(tz){
   print(tz)
@@ -247,17 +237,13 @@ ctrl <- lapply(v_tz, function(tz){
   old$date <- as.Date(old$date)
   stopifnot(all.equal(old, new))
   
-  # pour verifier la difference numerique
-  lapply(colnames(old)[-c(1:3)], function(x){
-    stopifnot( all(as.character(old[[x]]) == as.character(new[[x]]), na.rm = TRUE))
-  })
   
-  x <- "rise"
-  x <- "set"
-  ind_diff <- which(as.character(old[[x]]) != as.character(new[[x]]))
-
-  View(new[ind_diff, ])
-  View(old[ind_diff, ])
+  # x <- "rise"
+  # x <- "set"
+  # ind_diff <- which(as.character(old[[x]]) != as.character(new[[x]]))
+  # 
+  # View(new[ind_diff, ])
+  # View(old[ind_diff, ])
   # 
   # View(new[new$date != as.Date(new$rise), ])
   # View(old[old$date != as.Date(old$rise), ])
@@ -266,8 +252,6 @@ ctrl <- lapply(v_tz, function(tz){
 })
 
 ## getMoonPosition function ----
-
-
 
 # one date
 new <- suncalc::getMoonPosition(date = Sys.Date(), lat = 50.1, lon = 1.83)
@@ -325,9 +309,9 @@ stopifnot(all.equal(old, new))
 
 
 grid <- expand.grid(
-  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 20),
+  date = seq.Date(Sys.Date() - 365, Sys.Date(), by = 10),
   lat = seq(-90, 90, by = 10), 
-  lon = seq(-180, 180, by = 20)
+  lon = seq(-180, 180, by = 10)
 )
 
 system.time(new <-  suncalc::getMoonPosition(data = grid))
