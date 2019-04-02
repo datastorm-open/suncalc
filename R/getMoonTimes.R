@@ -5,14 +5,14 @@
 #' @param lon : \code{numeric}. Single longitude
 #' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
 #' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
-#' @param tz : \code{character}. timezone of results
+#' @param tz : \code{character}. Timezone of results
 #' @param inUTC : \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.
 #' 
 #' @return \code{data.frame}
 #' 
 #' @details 
 #' 
-#' Availabled variables are :
+#' Available variables are :
 #' 
 #' \itemize{
 #'   \item{"rise"}{ : \code{Date}. moonrise time}

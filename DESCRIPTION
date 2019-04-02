@@ -16,4 +16,4 @@ License: GPL-2 | file LICENSE
 URL: https://github.com/datastorm-open/suncalc,
         https://github.com/mourner/suncalc
 NeedsCompilation: no
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
