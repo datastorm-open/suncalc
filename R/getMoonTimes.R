@@ -38,7 +38,12 @@
 #'     
 #' getMoonTimes(data = data, tz = "CET")
 #'       
-#' @import V8
+#' @rawNamespace import(data.table, except = hour)
+#' @import magrittr 
+#' @importFrom lubridate as_datetime
+#' @importFrom lubridate hours
+#' @importFrom lubridate seconds
+#' @importFrom lubridate hour 
 #' 
 #' @export
 #' 
@@ -53,53 +58,28 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   # data control
   data <- .buildData(date = date, lat = lat, lon = lon, data = data)
   
-  if(!"Date" %in% class(data$date)){
+  if (!"Date" %in% class(data$date)) {
     stop("date must to be a Date object (class Date)")
   }
-  
-  # data$date <- paste0(data$date, " 12:00:00")
   
   # variable control
   available_var <- c("rise", "set", "alwaysUp", "alwaysDown")
   stopifnot(all(keep %in% available_var))
   
+  data <- data %>%
+    # .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
+    # .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(11), Sys.timezone())] %>%
+    .[, (available_var) := .getMoonTimes(date = date, lat = lat, lng = lon, inUTC = inUTC)] %>%
+    .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+    .[, date := as.Date(date)] %>% 
+    as.data.frame()
   
-  # call suncalc.js
-  ct <- v8()
-  
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
-  
-  mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), NA), stringsAsFactors = FALSE)
-  colnames(mat_res) <- available_var
-  mat_res$alwaysUp <- FALSE
-  mat_res$alwaysDown <- FALSE
-  add_res <- lapply(1:nrow(mat_res), function(x){
-    ct$eval(paste0("var tmp_res = SunCalc.getMoonTimes(new Date('", 
-                   data[x, "date"], "'),", data[x, "lat"], ", ", 
-                   data[x, "lon"], ",", tolower(inUTC), ");"))
-    
-    tmp_res <- unlist(ct$get("tmp_res"))
-    mat_res[x, names(tmp_res)] <<- tmp_res
-    invisible()
-  })
-  
-  # format
-  mat_res <- mat_res[, keep, drop = FALSE]
-  
-  # tz
-  col_tz <- which(colnames(mat_res) %in% c("rise", "set"))
-  if(length(col_tz) > 0){
-    ctrl_tz <- lapply(col_tz, function(x){
-      mat_res[, x] <<- as.POSIXct(mat_res[, x], format = "%Y-%m-%dT%H:%M:%S.", tz = "UTC")
-      if(!is.null(tz)){
-        if(tz != "UTC"){
-          attr(mat_res[, x], "tzone") <<- tz
-        }
-      }
-      invisible()
-    })
+  if (!is.null(tz)) {
+    invisible(lapply(c("rise", "set"),
+                     function(x) attr(data[[x]], "tzone") <<- tz)
+    )
   }
-
-  res <- cbind(data, mat_res)
-  res
+  
+  return(data)
+  
 }

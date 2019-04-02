@@ -47,7 +47,12 @@
 #'   keep = c("altitude", "azimuth"))
 #' 
 #'       
-#' @import V8
+#' @rawNamespace import(data.table, except = hour)
+#' @import magrittr 
+#' @importFrom lubridate as_datetime
+#' @importFrom lubridate hours
+#' @importFrom lubridate seconds
+#' @importFrom lubridate hour
 #' 
 #' @export
 #' 
@@ -55,37 +60,23 @@
 #' \link{getMoonPosition},\link{getSunlightPosition}
 #' 
 getSunlightPosition <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
-                            keep = c("altitude", "azimuth")){
+                            keep = c("altitude", "azimuth")) {
   
   # data control
   data <- .buildData(date = date, lat = lat, lon = lon, data = data)
 
-  # tz and date control
-  request_date <- .buildRequestDate(data$date)
   
   # variable control
   available_var <- c("altitude", "azimuth")
   stopifnot(all(keep %in% available_var))
   
-  # call suncalc.js
-  ct <- v8()
+  # tz and date control
+  data$requestDate <- .buildRequestDate(data$date)
+
+  data <- data %>% 
+    .[, (available_var) := .getPosition(date = requestDate, lat = lat, lng = lon)] %>% 
+    .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+    as.data.frame()
   
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
-  
-  mat_res <- data.frame(matrix(nrow = nrow(data), ncol = length(available_var), NA), 
-                        stringsAsFactors = FALSE)
-  colnames(mat_res) <- available_var
-  add_res <- lapply(1:nrow(mat_res), function(x){
-    ct$eval(paste0("var tmp_res = SunCalc.getPosition(new Date('", 
-                   request_date[x], "Z'),", data[x, "lat"], ", ", data[x, "lon"], ");"))
-    
-    tmp_res <- unlist(ct$get("tmp_res"))
-    mat_res[x, names(tmp_res)] <<- tmp_res
-    invisible()
-  })
-  
-  # format
-  mat_res <- mat_res[, keep, drop = FALSE]
-  res <- cbind(data, mat_res)
-  res
+  return(data)
 }

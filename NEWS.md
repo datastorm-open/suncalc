@@ -1,3 +1,11 @@
+# suncalc 0.5 (2019-04-02)
+
+## Major changes 
+* Full R implementation of all functions
+
+## Bugfixes
+* getSunlightTimes & getMoonTimes always return Date (rather than Date + 12:00:00...)
+
 # suncalc 0.4 (2018-02-22)
 
 ## Bugfixes

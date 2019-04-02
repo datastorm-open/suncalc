@@ -44,8 +44,17 @@
 #' getMoonIllumination(date = as.POSIXct("2017-05-12 00:00:00", tz = "UTC"))
 #' getMoonIllumination(date = as.POSIXct("2017-05-12 02:00:00", tz = "CET"))
 #' 
+#' date <- seq(ISOdate(2009,1,1), ISOdate(2010,1,1), "hours")
+#' date_cet <- date
+#' attr(date_cet, "tzone") <- "CET"
+#' res <- getMoonIllumination(date = date_cet)
 #'       
-#' @import V8
+#' @rawNamespace import(data.table, except = hour)
+#' @import magrittr 
+#' @importFrom lubridate as_datetime
+#' @importFrom lubridate hours
+#' @importFrom lubridate seconds
+#' @importFrom lubridate hour
 #' 
 #' @export
 #' 
@@ -54,33 +63,19 @@
 #' 
 getMoonIllumination <- function(date = Sys.Date(),
                          keep = c("fraction", "phase", "angle")){
-  # tz and date control
-  request_date <- .buildRequestDate(date)
-  
+
   # variable control
   available_var <- c("fraction", "phase", "angle")
   stopifnot(all(keep %in% available_var))
   
-  # call suncalc.js
-  ct <- v8()
+  # tz and date control
+  requestDate <- .buildRequestDate(date)
+  data <- data.table(date = date, requestDate = requestDate)
   
-  load_suncalc <- ct$source(system.file("suncalc/suncalc.js", package = "suncalc"))
+  data <- data %>% 
+    .[, (available_var) := .getMoonIllumination(date = requestDate)] %>% 
+    .[, c("date", keep), with = FALSE] %>% 
+    as.data.frame()
   
-  mat_res <- cbind.data.frame(date = date, 
-                              data.frame(matrix(nrow = length(date), ncol = length(available_var), NA), 
-                                         stringsAsFactors = FALSE))
-  colnames(mat_res)[-1] <- available_var
-  add_res <- lapply(1:nrow(mat_res), function(x){
-    ct$eval(paste0("var tmp_res = SunCalc.getMoonIllumination(new Date('", 
-                   request_date[x], "Z'));"))
-    
-    tmp_res <- unlist(ct$get("tmp_res"))
-    mat_res[x, names(tmp_res)] <<- tmp_res
-    invisible()
-  })
-  
-  # format
-  mat_res <- mat_res[, c("date", keep)]
-  
-  mat_res
+  return(data)
 }

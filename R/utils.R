@@ -1,12 +1,12 @@
 .buildData <- function(date = NULL, lat = NULL, lon = NULL, data = NULL){
   # data control
-  if(!is.null(data)){
+  if(!is.null(data)) {
     if(!is.null(date) | !is.null(lat) | !is.null(lon)){
       stop("Must use only 'data' argument, or 'date', 'lat', and 'lon' together. See examples")
     }
     
-    if(!isTRUE(all.equal("data.frame", class(data)))){
-      data <- data.frame(data)
+    if(!inherits(data, "data.table")) {
+      data <- data.table(data)
     }
     
   } else {
@@ -14,13 +14,13 @@
       stop("Must use only 'data' argument, or 'date', 'lat', and 'lon' together. See examples")
     }
     
-    if(length(lat) > 1){
+    if(length(lat) > 1) {
       stop("'lat' must be a unique element. Use 'data' for multiple 'lat'")
     }
-    if(length(lon) > 1){
+    if(length(lon) > 1) {
       stop("'lon' must be a unique element. Use 'data' for multiple 'lon'")
     }
-    data <- data.frame(date = date, lat = lat, lon = lon, stringsAsFactors = FALSE)
+    data <- data.table(date = date, lat = lat, lon = lon, stringsAsFactors = FALSE)
   }
   
   stopifnot(all(c("date", "lat", "lon") %in% colnames(data)))
@@ -36,10 +36,10 @@
   if("POSIXct" %in% class(date)){
     if(is.null(attr(date, "tzone"))){
       attr(request_date, "tzone") <- "UTC"
-      warning("'date' is convert to 'UTC' for request using 'attr(date, 'tzone') <- 'UTC'")
+      warning("No tzone present in 'date', so 'date' is convert to 'UTC' for request using 'attr(date, 'tzone') <- 'UTC'")
     } else if(attr(date, "tzone") != "UTC"){
       attr(request_date, "tzone") <- "UTC"
-      warning("'date' is convert to 'UTC' for request using 'attr(date, 'tzone') <- 'UTC'")
+      # warning("'date' is convert to 'UTC' for request using 'attr(date, 'tzone') <- 'UTC'")
     }
   }
   request_date
