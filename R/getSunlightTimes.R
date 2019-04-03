@@ -80,7 +80,7 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                      "goldenHourEnd", "goldenHour")
   stopifnot(all(keep %in% available_var))
   
-  # date = lubridate::force_tz(lubridate::as_datetime(Sys.Date()) + lubridate::hours(12), Sys.timezone())
+  # date := lubridate::force_tz(lubridate::as_datetime(Sys.Date()) + lubridate::hours(12), Sys.timezone())
   data <- data %>% 
     .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), Sys.timezone())] %>% 
     .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 

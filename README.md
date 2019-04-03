@@ -1,5 +1,5 @@
-[![CRAN Status Badge](http://www.r-pkg.org/badges/version/suncalc)](http://cran.r-project.org/package=suncalc) 
-[![CRAN Downloads Badge](https://cranlogs.r-pkg.org/badges/suncalc)](http://cran.r-project.org/package=suncalc)
+[![CRAN Status Badge](http://www.r-pkg.org/badges/version/suncalc)](https://cran.r-project.org/package=suncalc) 
+[![CRAN Downloads Badge](https://cranlogs.r-pkg.org/badges/suncalc)](https://cran.r-project.org/package=suncalc)
 
 # suncalc
 
