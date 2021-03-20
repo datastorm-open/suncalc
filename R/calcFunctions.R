@@ -157,8 +157,8 @@
                  night = .fromJulian(.getSetJ(-18 * rad, lw, phi, dec, n, M, L)),
                  goldenHourEnd = .fromJulian(Jnoon - (.getSetJ(6 * rad, lw, phi, dec, n, M, L) - Jnoon)),
                  goldenHour = .fromJulian(.getSetJ(6 * rad, lw, phi, dec, n, M, L)),
-                 custom1 = .fromJulian(.getSetJ(alt * rad, lw, phi, dec, n, M, L)),
-                 custom2 = .fromJulian(Jnoon - (.getSetJ(alt * rad, lw, phi, dec, n, M, L) - Jnoon))
+                 custom1 = .fromJulian(Jnoon - (.getSetJ(alt * rad, lw, phi, dec, n, M, L) - Jnoon)),
+                 custom2 = .fromJulian(.getSetJ(alt * rad, lw, phi, dec, n, M, L))
   )
   
   return(result)
