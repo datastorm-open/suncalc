@@ -64,7 +64,7 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
            keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
                     "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
                     "goldenHourEnd", "goldenHour", "custom1", "custom2"), 
-           tz = "UTC", alt = 7){
+           tz = "UTC", alt = 45){
   
   
   # data control
