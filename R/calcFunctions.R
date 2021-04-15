@@ -123,7 +123,7 @@
 }
 
 # calculates sun times for a given date and latitude/longitude
-.getTimes <- function(date, lat, lng) {
+.getTimes <- function(date, lat, lng, alt) {
   
   rad <- (pi / 180)
   lw <- rad * -lng
@@ -156,7 +156,9 @@
                  nightEnd = .fromJulian(Jnoon - (.getSetJ(-18 * rad, lw, phi, dec, n, M, L) - Jnoon)),
                  night = .fromJulian(.getSetJ(-18 * rad, lw, phi, dec, n, M, L)),
                  goldenHourEnd = .fromJulian(Jnoon - (.getSetJ(6 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 goldenHour = .fromJulian(.getSetJ(6 * rad, lw, phi, dec, n, M, L))
+                 goldenHour = .fromJulian(.getSetJ(6 * rad, lw, phi, dec, n, M, L)),
+                 custom1 = .fromJulian(Jnoon - (.getSetJ(alt * rad, lw, phi, dec, n, M, L) - Jnoon)),
+                 custom2 = .fromJulian(.getSetJ(alt * rad, lw, phi, dec, n, M, L))
   )
   
   return(result)

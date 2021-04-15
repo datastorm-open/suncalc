@@ -16,7 +16,7 @@
 ```` 
 # from cran
 install.packages("suncalc")
-devtools::install_github("datastorm-open/suncalc") for developpement version
+devtools::install_github("tuberculo/suncalc") for version from this repo.
 ````
 
 # Use

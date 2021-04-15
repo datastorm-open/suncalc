@@ -63,8 +63,8 @@
 getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
            keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
                     "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
-                    "goldenHourEnd", "goldenHour"), 
-           tz = "UTC"){
+                    "goldenHourEnd", "goldenHour", "custom1", "custom2"), 
+           tz = "UTC", alt = 45){
   
   
   # data control
@@ -77,13 +77,13 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   # variable control
   available_var <- c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
                      "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
-                     "goldenHourEnd", "goldenHour")
+                     "goldenHourEnd", "goldenHour", "custom1", "custom2")
   stopifnot(all(keep %in% available_var))
   
   # date := lubridate::force_tz(lubridate::as_datetime(Sys.Date()) + lubridate::hours(12), Sys.timezone())
   data <- data %>% 
     .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), Sys.timezone())] %>% 
-    .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
+    .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon, alt = alt)] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
     .[, date := as.Date(date)] %>% 
     as.data.frame()
