@@ -1,3 +1,7 @@
+# suncalc 0.5.1 (2022-09-28)
+
+* Update maintener
+
 # suncalc 0.5 (2019-04-02)
 
 ## Major changes 

@@ -4,8 +4,13 @@
 \alias{getMoonPosition}
 \title{Get Moon position}
 \usage{
-getMoonPosition(date = NULL, lat = NULL, lon = NULL, data = NULL,
-  keep = c("altitude", "azimuth", "distance", "parallacticAngle"))
+getMoonPosition(
+  date = NULL,
+  lat = NULL,
+  lon = NULL,
+  data = NULL,
+  keep = c("altitude", "azimuth", "distance", "parallacticAngle")
+)
 }
 \arguments{
 \item{date}{: Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD), 
