@@ -30,10 +30,10 @@ getSunlightTimes(date = Sys.Date(), lat = 50.1, lon = 1.83, tz = "CET")
 # About suncalc
 
 Most calculations are based on the formulas given in the excellent Astronomy Answers articles
-about [position of the sun](http://aa.quae.nl/en/reken/zonpositie.html)
-and [the planets](http://aa.quae.nl/en/reken/hemelpositie.html).
+about [position of the sun](https://www.aa.quae.nl/en/reken/zonpositie.html)
+and [the planets](https://www.aa.quae.nl/en/reken/hemelpositie.html).
 You can read about different twilight phases calculated by SunCalc
-in the [Twilight article on Wikipedia](http://en.wikipedia.org/wiki/Twilight).
+in the [Twilight article on Wikipedia](https://en.wikipedia.org/wiki/Twilight).
 
 
 ## Reference
