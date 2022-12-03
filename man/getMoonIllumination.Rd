@@ -4,8 +4,7 @@
 \alias{getMoonIllumination}
 \title{Get Moon illumination}
 \usage{
-getMoonIllumination(date = Sys.Date(), keep = c("fraction", "phase",
-  "angle"))
+getMoonIllumination(date = Sys.Date(), keep = c("fraction", "phase", "angle"))
 }
 \arguments{
 \item{date}{: Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD), 

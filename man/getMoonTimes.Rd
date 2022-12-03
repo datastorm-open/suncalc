@@ -4,9 +4,15 @@
 \alias{getMoonTimes}
 \title{Get Moon times}
 \usage{
-getMoonTimes(date = NULL, lat = NULL, lon = NULL, data = NULL,
-  keep = c("rise", "set", "alwaysUp", "alwaysDown"), tz = "UTC",
-  inUTC = FALSE)
+getMoonTimes(
+  date = NULL,
+  lat = NULL,
+  lon = NULL,
+  data = NULL,
+  keep = c("rise", "set", "alwaysUp", "alwaysDown"),
+  tz = "UTC",
+  inUTC = FALSE
+)
 }
 \arguments{
 \item{date}{: \code{Date}. Single or multiple Date. YYYY-MM-DD}

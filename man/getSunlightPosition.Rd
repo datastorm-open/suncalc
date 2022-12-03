@@ -4,8 +4,13 @@
 \alias{getSunlightPosition}
 \title{Get Sunlight position}
 \usage{
-getSunlightPosition(date = NULL, lat = NULL, lon = NULL,
-  data = NULL, keep = c("altitude", "azimuth"))
+getSunlightPosition(
+  date = NULL,
+  lat = NULL,
+  lon = NULL,
+  data = NULL,
+  keep = c("altitude", "azimuth")
+)
 }
 \arguments{
 \item{date}{: Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD), 
