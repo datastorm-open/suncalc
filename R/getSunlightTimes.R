@@ -82,7 +82,7 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   
   # date := lubridate::force_tz(lubridate::as_datetime(Sys.Date()) + lubridate::hours(12), Sys.timezone())
   data <- data %>% 
-    .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), Sys.timezone())] %>% 
+    .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), "UTC")] %>% 
     .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
     .[, date := as.Date(date)] %>% 
