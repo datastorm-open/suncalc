@@ -1,3 +1,7 @@
+# suncalc 0.5.2 (2023-11-02)
+
+* Fix getMoonTimes not keeping "rise" and "set"
+
 # suncalc 0.5.1 (2022-09-28)
 
 * Update maintener
