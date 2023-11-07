@@ -6,7 +6,7 @@
 #' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
 #' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
 #' @param tz : \code{character}. Timezone of results
-#' @param inUTC : \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.
+#' @param ... :Not used. (Maintenance only)
 #' 
 #' @return \code{data.frame}
 #' 
@@ -52,8 +52,12 @@
 #' 
 getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                              keep = c("rise", "set", "alwaysUp", "alwaysDown"), 
-                             tz = "UTC", inUTC = FALSE){
+                             tz = "UTC", ...){
   
+  
+  if("inUTC" %in% names(list(...))){
+    warning("inUTC is deprecated since suncalc >= 0.5.2")
+  }
   
   # data control
   data <- .buildData(date = date, lat = lat, lon = lon, data = data)
@@ -68,11 +72,10 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   
   data <- data %>%
     # .[, date := lubridate::as_datetime(date, tz = "UTC") + lubridate::hours(12)] %>% 
-    #  .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), "UTC")] %>%
-    .[, (available_var) := .getMoonTimes(date = date, lat = lat, lng = lon, inUTC = inUTC)] %>%
+    .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), "UTC")] %>%
+    .[, (available_var) := .getMoonTimes(date = date, lat = lat, lng = lon)] %>%
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
-    .[, date := as.Date(date)] %>% 
-    as.data.frame()
+    .[, date := as.Date(date)]
   
   if (!is.null(tz)) {
     invisible(lapply(c("rise", "set"),
@@ -80,6 +83,86 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
     )
   }
   
-  return(data)
+  if(any(c("rise", "set") %in% colnames(data))){
+  # browser()
+    # check value with datetime before date in TZ
+    mat <- as.matrix(data[, intersect(colnames(data), c("rise", "set")), with = FALSE])
+    is_inf <- which(is.na(mat) | mat < as.character(lubridate::force_tz(lubridate::as_datetime(data$date) + lubridate::hours(0), tz)), arr.ind =  T)
+    
+    if(nrow(is_inf) > 0){
+      
+      is_inf <- as.data.table(is_inf)
+      
+      unique_inf_row <- data.frame(row = sort(unique(is_inf$row)))
+      unique_inf_row$id_row <- 1:nrow(unique_inf_row)
+      
+      is_inf[, id_row := unique_inf_row$id_row[match(row, unique_inf_row$row)]]
+      
+      data_inf <- data[unique_inf_row$row, c("date", "lat", "lon"), with = FALSE]
+      
+      data_inf <- data_inf %>% 
+        .[, date := lubridate::force_tz(lubridate::as_datetime(date + 1) + lubridate::hours(12), "UTC")] %>% 
+        .[, (available_var) := .getMoonTimes(date = date, lat = lat, lng = lon)] %>%
+        .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+        .[, date := as.Date(date)]
+      
+      if (!is.null(tz)) {
+        invisible(lapply(c("rise", "set"),
+                         function(x) if(x %in% names(data_inf)) attr(data_inf[[x]], "tzone") <<- tz)
+        )
+      }
+      
+      invisible({
+        lapply(
+          unique(is_inf$col),
+          function(x){
+            col_names <- intersect(colnames(data), c("rise", "set"))[x]
+            data[is_inf[col == x, row], c(col_names) := data_inf[is_inf[col == x, id_row], get(col_names)]]
+            data[is_inf[col == x, row] & as.Date(get(col_names), tz = tz) != date, c(col_names) := NA]
+          }
+        )
+      })
+    }
+    
+    # check value with datetime after date in TZ
+    mat <- as.matrix(data[, intersect(colnames(data), c("rise", "set")), with = FALSE])
+    is_sup <- which(is.na(mat) | mat >= as.character(lubridate::force_tz(lubridate::as_datetime(data$date + 1) + lubridate::hours(0), tz)), arr.ind =  T)
+    if(nrow(is_sup) > 0){
+      
+      is_sup <- as.data.table(is_sup)
+      
+      unique_sup_row <- data.frame(row = sort(unique(is_sup$row)))
+      unique_sup_row$id_row <- 1:nrow(unique_sup_row)
+      
+      is_sup[, id_row := unique_sup_row$id_row[match(row, unique_sup_row$row)]]
+      
+      data_sup <- data[unique_sup_row$row, c("date", "lat", "lon"), with = FALSE]
+      
+      data_sup <- data_sup %>% 
+        .[, date := lubridate::force_tz(lubridate::as_datetime(date - 1) + lubridate::hours(12), "UTC")] %>% 
+        .[, (available_var) := .getMoonTimes(date = date, lat = lat, lng = lon)] %>%
+        .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+        .[, date := as.Date(date)]
+      
+      if (!is.null(tz)) {
+        invisible(lapply(c("rise", "set"),
+                         function(x) if(x %in% names(data_sup)) attr(data_sup[[x]], "tzone") <<- tz)
+        )
+      }
+      
+      invisible({
+        lapply(
+          unique(is_sup$col),
+          function(x){
+            col_names <- intersect(colnames(data), c("rise", "set"))[x]
+            data[is_sup[col == x, row], c(col_names) := data_sup[is_sup[col == x, id_row], get(col_names)]]
+            data[is_sup[col == x, row] & as.Date(get(col_names), tz = tz) != date, c(col_names) := NA]
+          }
+        )
+      })
+    }
+  }
+  
+  return(as.data.frame(data))
   
 }

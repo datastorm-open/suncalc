@@ -61,10 +61,10 @@
 #' \link{getMoonPosition},\link{getSunlightPosition}
 #' 
 getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
-           keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
-                    "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
-                    "goldenHourEnd", "goldenHour"), 
-           tz = "UTC"){
+                             keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
+                                      "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
+                                      "goldenHourEnd", "goldenHour"), 
+                             tz = "UTC"){
   
   
   # data control
@@ -73,7 +73,7 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   if (!"Date" %in% class(data$date)) {
     stop("date must to be a Date object (class Date)")
   }
-
+  
   # variable control
   available_var <- c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  
                      "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
@@ -82,15 +82,93 @@ getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
   
   # date := lubridate::force_tz(lubridate::as_datetime(Sys.Date()) + lubridate::hours(12), Sys.timezone())
   data <- data %>% 
-    .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), Sys.timezone())] %>% 
-    .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon)] %>% 
+    .[, date := lubridate::force_tz(lubridate::as_datetime(date) + lubridate::hours(12), "UTC")] %>% 
+    .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon, tz = "UTC")] %>% 
     .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
-    .[, date := as.Date(date)] %>% 
-    as.data.frame()
+    .[, date := as.Date(date)]
+  
+  invisible({
+    lapply(
+      setdiff(colnames(data), c("date", "lat", "lon")),
+      function(x) attr(data[[x]], "tzone") <<- tz
+    )
+  })
+  
+  # check value with datetime before date in TZ
+  mat <- as.matrix(data[, setdiff(colnames(data), c("date", "lat", "lon")), with = FALSE])
+  is_inf <- which(is.na(mat) | mat < as.character(lubridate::force_tz(lubridate::as_datetime(data$date) + lubridate::hours(0), tz)), arr.ind =  T)
+  if(nrow(is_inf) > 0){
     
-    invisible(lapply(setdiff(colnames(data), c("date", "lat", "lon")),
-                     function(x) attr(data[[x]], "tzone") <<- tz)
-              )
-
-  return(data)
+    is_inf <- as.data.table(is_inf)
+    
+    unique_inf_row <- data.frame(row = sort(unique(is_inf$row)))
+    unique_inf_row$id_row <- 1:nrow(unique_inf_row)
+    
+    is_inf[, id_row := unique_inf_row$id_row[match(row, unique_inf_row$row)]]
+ 
+    data_inf <- data[unique_inf_row$row, c("date", "lat", "lon"), with = FALSE]
+    
+    data_inf <- data_inf %>% 
+      .[, date := lubridate::force_tz(lubridate::as_datetime(date + 1) + lubridate::hours(12), "UTC")] %>% 
+      .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon, tz = "UTC")] %>% 
+      .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+      .[, date := as.Date(date)]
+    
+    invisible({
+      lapply(
+        setdiff(colnames(data_inf), c("date", "lat", "lon")),
+        function(x) attr(data_inf[[x]], "tzone") <<- tz
+      )
+    })
+    
+    invisible({
+      lapply(
+        unique(is_inf$col),
+        function(x){
+          col_names <- setdiff(colnames(data), c("date", "lat", "lon"))[x]
+          data[is_inf[col == x, row], c(col_names) := data_inf[is_inf[col == x, id_row], get(col_names)]]
+        }
+      )
+    })
+  }
+  
+  # check value with datetime after date in TZ
+  mat <- as.matrix(data[, setdiff(colnames(data), c("date", "lat", "lon")), with = FALSE])
+  is_sup <- which(is.na(mat) | mat >= as.character(lubridate::force_tz(lubridate::as_datetime(data$date + 1) + lubridate::hours(0), tz)), arr.ind =  T)
+  if(nrow(is_sup) > 0){
+    
+    is_sup <- as.data.table(is_sup)
+    
+    unique_sup_row <- data.frame(row = sort(unique(is_sup$row)))
+    unique_sup_row$id_row <- 1:nrow(unique_sup_row)
+    
+    is_sup[, id_row := unique_sup_row$id_row[match(row, unique_sup_row$row)]]
+    
+    data_sup <- data[unique_sup_row$row, c("date", "lat", "lon"), with = FALSE]
+    
+    data_sup <- data_sup %>% 
+      .[, date := lubridate::force_tz(lubridate::as_datetime(date - 1) + lubridate::hours(12), "UTC")] %>% 
+      .[, (available_var) := .getTimes(date = date, lat = lat, lng = lon, tz = "UTC")] %>% 
+      .[, c("date", "lat", "lon", keep), with = FALSE] %>% 
+      .[, date := as.Date(date)]
+    
+    invisible({
+      lapply(
+        setdiff(colnames(data_sup), c("date", "lat", "lon")),
+        function(x) attr(data_sup[[x]], "tzone") <<- tz
+      )
+    })
+    
+    invisible({
+      lapply(
+        unique(is_sup$col),
+        function(x){
+          col_names <- setdiff(colnames(data), c("date", "lat", "lon"))[x]
+          data[is_sup[col == x, row], c(col_names) := data_sup[is_sup[col == x, id_row], get(col_names)]]
+        }
+      )
+    })
+  }
+  
+  return(as.data.frame(data))
 }

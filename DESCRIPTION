@@ -18,5 +18,5 @@ Imports:
 License: GPL-2 | file LICENSE
 URL: https://github.com/datastorm-open/suncalc
 NeedsCompilation: no
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Encoding: UTF-8

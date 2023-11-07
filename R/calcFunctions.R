@@ -1,22 +1,22 @@
 
 
-.toJulian <- function(date) {
+.toJulian <- function(date, tz = "UTC") {
   dayS <- 60 * 60 * 24
   J1970 <- 2440588
-  nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = "UTC"))
+  nb_ms_from_J1970 <- as.numeric(as.POSIXct(date, tz = tz))
   return((nb_ms_from_J1970 / dayS) - 0.5 + J1970)
 }
 
-.fromJulian <- function(j) {
+.fromJulian <- function(j, tz = "UTC") {
   dayS <- 60 * 60 * 24
   J1970 <- 2440588
-  date <- as.POSIXct((j + 0.5 - J1970) * dayS , as.POSIXct('1970-01-01', tz = 'UTC'), tz = 'UTC') 
+  date <- as.POSIXct((j + 0.5 - J1970) * dayS , as.POSIXct('1970-01-01', tz = tz), tz = tz) 
   return(lubridate::floor_date(date))
 }
 
-.toDays <- function(date) {
+.toDays <- function(date, tz = "UTC") {
   J2000 <- 2451545
-  return(.toJulian(date) - J2000)
+  return(.toJulian(date, tz = tz) - J2000)
 }
 
 
@@ -123,13 +123,13 @@
 }
 
 # calculates sun times for a given date and latitude/longitude
-.getTimes <- function(date, lat, lng) {
+.getTimes <- function(date, lat, lng, tz = "UTC") {
   
   rad <- (pi / 180)
   lw <- rad * -lng
   phi <- rad * lat
   
-  d <- .toDays(date)
+  d <- .toDays(date, tz = tz)
   n <- .julianCycle(d, lw)
   ds <- .approxTransit(0, lw, n)
   
@@ -143,20 +143,20 @@
                      "dawn", "dusk", "nauticalDawn", "nauticalDusk", "nightEnd", "night",
                      "goldenHourEnd", "goldenHour")
   
-  result <- list(solarNoon = .fromJulian(Jnoon),
-                 nadir = .fromJulian(Jnoon - 0.5),
-                 sunrise = .fromJulian(Jnoon - (.getSetJ(-0.833 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 sunset = .fromJulian(.getSetJ(-0.833 * rad, lw, phi, dec, n, M, L)),
-                 sunriseEnd = .fromJulian(Jnoon - (.getSetJ(-0.3 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 sunsetStart = .fromJulian(.getSetJ(-0.3 * rad, lw, phi, dec, n, M, L)),
-                 dawn = .fromJulian(Jnoon - (.getSetJ(-6 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 dusk = .fromJulian(.getSetJ(-6 * rad, lw, phi, dec, n, M, L)),
-                 nauticalDawn = .fromJulian(Jnoon - (.getSetJ(-12 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 nauticalDusk = .fromJulian(.getSetJ(-12 * rad, lw, phi, dec, n, M, L)),
-                 nightEnd = .fromJulian(Jnoon - (.getSetJ(-18 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 night = .fromJulian(.getSetJ(-18 * rad, lw, phi, dec, n, M, L)),
-                 goldenHourEnd = .fromJulian(Jnoon - (.getSetJ(6 * rad, lw, phi, dec, n, M, L) - Jnoon)),
-                 goldenHour = .fromJulian(.getSetJ(6 * rad, lw, phi, dec, n, M, L))
+  result <- list(solarNoon = .fromJulian(Jnoon, tz = tz),
+                 nadir = .fromJulian(Jnoon - 0.5, tz = tz),
+                 sunrise = .fromJulian(Jnoon - (.getSetJ(-0.833 * rad, lw, phi, dec, n, M, L) - Jnoon), tz = tz),
+                 sunset = .fromJulian(.getSetJ(-0.833 * rad, lw, phi, dec, n, M, L), tz = tz),
+                 sunriseEnd = .fromJulian(Jnoon - (.getSetJ(-0.3 * rad, lw, phi, dec, n, M, L) - Jnoon), tz = tz),
+                 sunsetStart = .fromJulian(.getSetJ(-0.3 * rad, lw, phi, dec, n, M, L), tz = tz),
+                 dawn = .fromJulian(Jnoon - (.getSetJ(-6 * rad, lw, phi, dec, n, M, L) - Jnoon), tz = tz),
+                 dusk = .fromJulian(.getSetJ(-6 * rad, lw, phi, dec, n, M, L), tz = tz),
+                 nauticalDawn = .fromJulian(Jnoon - (.getSetJ(-12 * rad, lw, phi, dec, n, M, L) - Jnoon), tz = tz),
+                 nauticalDusk = .fromJulian(.getSetJ(-12 * rad, lw, phi, dec, n, M, L), tz = tz),
+                 nightEnd = .fromJulian(Jnoon - (.getSetJ(-18 * rad, lw, phi, dec, n, M, L) - Jnoon), tz = tz),
+                 night = .fromJulian(.getSetJ(-18 * rad, lw, phi, dec, n, M, L), tz = tz),
+                 goldenHourEnd = .fromJulian(Jnoon - (.getSetJ(6 * rad, lw, phi, dec, n, M, L) - Jnoon), tz = tz),
+                 goldenHour = .fromJulian(.getSetJ(6 * rad, lw, phi, dec, n, M, L), tz = tz)
   )
   
   return(result)
@@ -231,73 +231,15 @@
   return(lubridate::floor_date(date + as.numeric(lubridate::milliseconds(h*3600*(10**3)))))
 }
 
-# calculations for moon rise/set times are based on http:#www.stargazing.net/kepler/moonrise.html article
-# .getMoonTimes <- function(date, lat, lng, inUTC) {
-#   
-#   t <- date
-#   lubridate::hour(t) <- 0
-#   
-#   hc <- 0.133 * (pi / 180)
-#   h0 <- .getMoonPosition(t, lat, lng)$altitude - hc
-#   
-#   rise <- NULL
-#   set <- NULL
-#   # go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
-#   for (i in seq(0,24,2)) {
-#     h1 <- .getMoonPosition(.hourslater(t, i), lat, lng)$altitude - hc
-#     h2 <- .getMoonPosition(.hourslater(t, i + 1), lat, lng)$altitude - hc
-# 
-#     a <- (h0 + h2)/2 - h1
-#     b <- (h2 - h0)/2
-#     xe <- -b/(2 * a)
-#     ye <- (a * xe + b) * xe + h1
-#     d <- b * b - 4 * a * h1
-#     roots <- 0
-# 
-#     if (d >= 0) {
-#       dx <- sqrt(d) / (abs(a) * 2)
-#       x1 <- xe - dx
-#       x2 <- xe + dx
-#       if (abs(x1) <= 1) roots <- roots + 1
-#       if (abs(x2) <= 1) roots <- roots + 1
-#       if (x1 < -1) x1 <- x2
-#     }
-# 
-#     if (roots == 1) {
-#       if (h0 < 0) rise <- i + x1
-#       else set <- i + x1
-# 
-#     } else if (roots == 2) {
-#       rise <- i + ifelse(ye < 0, x2, x1)
-#       set <- i + ifelse(ye < 0, x1, x2)
-#     }
-# 
-#     if (!is.null(rise) && !is.null(set)) break
-# 
-#     h0 <- h2
-#   }
-#   
-#   
-#   result <- list(rise = NULL, 
-#                  set = NULL, 
-#                  alwaysUp = FALSE,
-#                  alwaysDown = FALSE)
-#   
-#   if (!is.null(rise)) result[["rise"]] <- .hourslater(t, rise)
-#   if (!is.null(set)) result[["set"]] <- .hourslater(t, set)
-#   if (is.null(rise) && is.null(set)) result[[ifelse(ye > 0, 'alwaysUp', 'alwaysDown')]] <- TRUE
-#   
-#   return(result)
-# }
-
-
-.getMoonTimes <- function(date, lat, lng, inUTC) {
+.getMoonTimes <- function(date, lat, lng) {
   
-  if (inUTC) {
-    t <- as.POSIXct(as.character(date), tz = 'UTC')
-  } else {
-    t <- as.POSIXct(date, tz = Sys.timezone())
-  }
+  # if (inUTC) {
+  #   t <- as.POSIXct(as.character(date), tz = 'UTC')
+  # } else {
+  #   t <- as.POSIXct(date, tz = Sys.timezone())
+  # }
+  
+  t <- date
   
   lubridate::hour(t) <- 0
   

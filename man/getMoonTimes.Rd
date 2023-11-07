@@ -11,7 +11,7 @@ getMoonTimes(
   data = NULL,
   keep = c("rise", "set", "alwaysUp", "alwaysDown"),
   tz = "UTC",
-  inUTC = FALSE
+  ...
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ getMoonTimes(
 
 \item{tz}{: \code{character}. Timezone of results}
 
-\item{inUTC}{: \code{logical}. By default, it will search for moon rise and set during local user's day (from 0 to 24 hours). If TRUE, it will instead search the specified date from 0 to 24 UTC hours.}
+\item{...}{:Not used. (Maintenance only)}
 }
 \value{
 \code{data.frame}

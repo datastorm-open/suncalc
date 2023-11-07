@@ -1,6 +1,7 @@
 # suncalc 0.5.2 (2023-11-02)
 
 * Fix getMoonTimes not keeping "rise" and "set"
+* Dates with times before a certain time return times for previous/newt day (#2)
 
 # suncalc 0.5.1 (2022-09-28)
 
