@@ -1,11 +1,11 @@
 #' Get Sunlight position
 #' 
-#' @param date : Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD), 
+#' @param date Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD),
 #' a \code{character} in UTC (YYYY-MM-DD HH:mm:ss) or a \code{POSIXct}
-#' @param lat : \code{numeric}. Single latitude
-#' @param lon : \code{numeric}. Single longitude
-#' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
-#' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
+#' @param lat \code{numeric}. Single latitude
+#' @param lon \code{numeric}. Single longitude
+#' @param data \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
+#' @param keep \code{character}. Vector of variables to keep. See \code{Details}
 #' 
 #' @return \code{data.frame}
 #' 
@@ -13,9 +13,9 @@
 #' 
 #' Returns an object with the following properties:
 #' 
-#' \itemize{
-#'   \item{"altitude"}{ : sun altitude above the horizon in radians, e.g. 0 at the horizon and PI/2 at the zenith (straight over your head)}
-#'   \item{"azimuth"}{ : sun azimuth in radians (direction along the horizon, measured from south to west), e.g. 0 is south and Math.PI * 3/4 is northwest}
+#' \describe{
+#'   \item{"altitude"}{sun altitude above the horizon in radians, e.g. 0 at the horizon and PI/2 at the zenith (straight over your head)}
+#'   \item{"azimuth"}{sun azimuth in radians (direction along the horizon, measured from south to west), e.g. 0 is south and Math.PI * 3/4 is northwest}
 #' }
 #' 
 #' @examples 
@@ -56,8 +56,7 @@
 #' 
 #' @export
 #' 
-#' @seealso \link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
-#' \link{getMoonPosition},\link{getSunlightPosition}
+#' @family suncalc functions
 #' 
 getSunlightPosition <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                             keep = c("altitude", "azimuth")) {

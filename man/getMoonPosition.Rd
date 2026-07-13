@@ -13,16 +13,16 @@ getMoonPosition(
 )
 }
 \arguments{
-\item{date}{: Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD), 
+\item{date}{Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD),
 a \code{character} in UTC (YYYY-MM-DD HH:mm:ss) or a \code{POSIXct}}
 
-\item{lat}{: \code{numeric}. Single latitude}
+\item{lat}{\code{numeric}. Single latitude}
 
-\item{lon}{: \code{numeric}. Single longitude}
+\item{lon}{\code{numeric}. Single longitude}
 
-\item{data}{: \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates}
+\item{data}{\code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates}
 
-\item{keep}{: \code{character}. Vector of variables to keep. See \code{Details}}
+\item{keep}{\code{character}. Vector of variables to keep. See \code{Details}}
 }
 \value{
 \code{data.frame}
@@ -33,11 +33,11 @@ Get Moon position
 \details{
 Returns an object with the following properties:
 
-\itemize{
-  \item{"altitude"}{ : moon altitude above the horizon in radians}
-  \item{"azimuth"}{ : moon azimuth in radians}
-  \item{"distance"}{ : distance to moon in kilometers}
-  \item{"parallacticAngle"}{ : parallactic angle of the moon in radians}
+\describe{
+  \item{"altitude"}{moon altitude above the horizon in radians}
+  \item{"azimuth"}{moon azimuth in radians}
+  \item{"distance"}{distance to moon in kilometers}
+  \item{"parallacticAngle"}{parallactic angle of the moon in radians}
 }
 }
 \examples{
@@ -71,6 +71,10 @@ getMoonPosition(data = data,
       
 }
 \seealso{
-\link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
-\link{getMoonPosition},\link{getSunlightPosition}
+Other suncalc functions:
+\code{\link[=getMoonIllumination]{getMoonIllumination()}},
+\code{\link[=getMoonTimes]{getMoonTimes()}},
+\code{\link[=getSunlightPosition]{getSunlightPosition()}},
+\code{\link[=getSunlightTimes]{getSunlightTimes()}}
 }
+\concept{suncalc functions}
