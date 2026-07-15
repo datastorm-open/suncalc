@@ -15,19 +15,19 @@ getMoonTimes(
 )
 }
 \arguments{
-\item{date}{: \code{Date}. Single or multiple Date. YYYY-MM-DD}
+\item{date}{\code{Date}. Single or multiple Date. YYYY-MM-DD}
 
-\item{lat}{: \code{numeric}. Single latitude}
+\item{lat}{\code{numeric}. Single latitude}
 
-\item{lon}{: \code{numeric}. Single longitude}
+\item{lon}{\code{numeric}. Single longitude}
 
-\item{data}{: \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates}
+\item{data}{\code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates}
 
-\item{keep}{: \code{character}. Vector of variables to keep. See \code{Details}}
+\item{keep}{\code{character}. Vector of variables to keep. See \code{Details}}
 
-\item{tz}{: \code{character}. Timezone of results}
+\item{tz}{\code{character}. Timezone of results}
 
-\item{...}{:Not used. (Maintenance only)}
+\item{...}{Not used. (Maintenance only)}
 }
 \value{
 \code{data.frame}
@@ -38,11 +38,11 @@ Get Moon times
 \details{
 Available variables are :
 
-\itemize{
-  \item{"rise"}{ : \code{Date}. moonrise time}
-  \item{"set"}{ : \code{Date}. moonset time}
-  \item{"alwaysUp"}{ : \code{Logical}. TRUE if the moon never rises or sets and is always above the horizon during the day}
-  \item{"alwaysDown"}{ : \code{Logical}. TRUE if the moon is always below the horizon}
+\describe{
+  \item{"rise"}{\code{Date}. moonrise time}
+  \item{"set"}{\code{Date}. moonset time}
+  \item{"alwaysUp"}{\code{Logical}. TRUE if the moon never rises or sets and is always above the horizon during the day}
+  \item{"alwaysDown"}{\code{Logical}. TRUE if the moon is always below the horizon}
 }
 }
 \examples{
@@ -64,6 +64,10 @@ getMoonTimes(data = data, tz = "CET")
       
 }
 \seealso{
-\link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
-\link{getMoonPosition},\link{getSunlightPosition}
+Other suncalc functions:
+\code{\link[=getMoonIllumination]{getMoonIllumination()}},
+\code{\link[=getMoonPosition]{getMoonPosition()}},
+\code{\link[=getSunlightPosition]{getSunlightPosition()}},
+\code{\link[=getSunlightTimes]{getSunlightTimes()}}
 }
+\concept{suncalc functions}

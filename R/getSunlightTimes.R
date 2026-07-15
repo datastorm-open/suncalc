@@ -1,11 +1,11 @@
 #' Get Sunlight times
 #' 
-#' @param date : \code{Date}. Single or multiple Date. YYYY-MM-DD
-#' @param lat : \code{numeric}. Single latitude
-#' @param lon : \code{numeric}. Single longitude
-#' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
-#' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
-#' @param tz : \code{character}. Timezone of results
+#' @param date \code{Date}. Single or multiple Date. YYYY-MM-DD
+#' @param lat \code{numeric}. Single latitude
+#' @param lon \code{numeric}. Single longitude
+#' @param data \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
+#' @param keep \code{character}. Vector of variables to keep. See \code{Details}
+#' @param tz \code{character}. Timezone of results
 #' 
 #' @return \code{data.frame}
 #' 
@@ -13,21 +13,21 @@
 #' 
 #' Available variables are :
 #' 
-#' \itemize{
-#'   \item{"sunrise"}{ : sunrise (top edge of the sun appears on the horizon)}
-#'   \item{"sunriseEnd"}{ : sunrise ends (bottom edge of the sun touches the horizon)}
-#'   \item{"goldenHourEnd"}{ : morning golden hour (soft light, best time for photography) ends}
-#'   \item{"solarNoon"}{ : solar noon (sun is in the highest position)}
-#'   \item{"goldenHour"}{ : evening golden hour starts}
-#'   \item{"sunsetStart"}{ : sunset starts (bottom edge of the sun touches the horizon)}
-#'   \item{"sunset"}{ : sunset (sun disappears below the horizon, evening civil twilight starts)}
-#'   \item{"dusk"}{ : dusk (evening nautical twilight starts)}
-#'   \item{"nauticalDusk"}{ : nautical dusk (evening astronomical twilight starts)}
-#'   \item{"night"}{ : night starts (dark enough for astronomical observations)}
-#'   \item{"nadir"}{ : nadir (darkest moment of the night, sun is in the lowest position)}
-#'   \item{"nightEnd"}{ : night ends (morning astronomical twilight starts)}
-#'   \item{"nauticalDawn"}{ : nautical dawn (morning nautical twilight starts)}
-#'   \item{"dawn"}{ : dawn (morning nautical twilight ends, morning civil twilight starts)}
+#' \describe{
+#'   \item{"sunrise"}{sunrise (top edge of the sun appears on the horizon)}
+#'   \item{"sunriseEnd"}{sunrise ends (bottom edge of the sun touches the horizon)}
+#'   \item{"goldenHourEnd"}{morning golden hour (soft light, best time for photography) ends}
+#'   \item{"solarNoon"}{solar noon (sun is in the highest position)}
+#'   \item{"goldenHour"}{evening golden hour starts}
+#'   \item{"sunsetStart"}{sunset starts (bottom edge of the sun touches the horizon)}
+#'   \item{"sunset"}{sunset (sun disappears below the horizon, evening civil twilight starts)}
+#'   \item{"dusk"}{dusk (evening nautical twilight starts)}
+#'   \item{"nauticalDusk"}{nautical dusk (evening astronomical twilight starts)}
+#'   \item{"night"}{night starts (dark enough for astronomical observations)}
+#'   \item{"nadir"}{nadir (darkest moment of the night, sun is in the lowest position)}
+#'   \item{"nightEnd"}{night ends (morning astronomical twilight starts)}
+#'   \item{"nauticalDawn"}{nautical dawn (morning nautical twilight starts)}
+#'   \item{"dawn"}{dawn (morning nautical twilight ends, morning civil twilight starts)}
 #' }
 #' 
 #' @examples 
@@ -57,8 +57,7 @@
 #' 
 #' @export
 #' 
-#' @seealso \link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
-#' \link{getMoonPosition},\link{getSunlightPosition}
+#' @family suncalc functions
 #' 
 getSunlightTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                              keep = c("solarNoon", "nadir", "sunrise", "sunset", "sunriseEnd", "sunsetStart",  

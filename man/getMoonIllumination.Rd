@@ -7,10 +7,10 @@
 getMoonIllumination(date = Sys.Date(), keep = c("fraction", "phase", "angle"))
 }
 \arguments{
-\item{date}{: Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD), 
+\item{date}{Single or multiple DateTime. Can be a \code{Date} (YYYY-MM-DD),
 a \code{character} in UTC (YYYY-MM-DD HH:mm:ss) or a \code{POSIXct}}
 
-\item{keep}{: \code{character}. Vector of variables to keep. See \code{Details}}
+\item{keep}{\code{character}. Vector of variables to keep. See \code{Details}}
 }
 \value{
 \code{data.frame}
@@ -19,25 +19,26 @@ a \code{character} in UTC (YYYY-MM-DD HH:mm:ss) or a \code{POSIXct}}
 Get Moon illumination
 }
 \details{
-Returns an object with the following properties:
+Computes the following properties:
 
-\itemize{
-  \item{"fraction"}{ :  illuminated fraction of the moon; varies from 0.0 (new moon) to 1.0 (full moon)}
-  \item{"phase"}{ :  moon phase; varies from 0.0 to 1.0, described below}
-  \item{"angle"}{ :  midpoint angle in radians of the illuminated limb of the moon reckoned eastward from 
+\describe{
+  \item{"fraction"}{illuminated fraction of the moon; varies from 0.0 (new moon) to 1.0 (full moon)}
+  \item{"phase"}{moon phase; varies from 0.0 to 1.0, described below}
+  \item{"angle"}{midpoint angle in radians of the illuminated limb of the moon reckoned eastward from 
 the north point of the disk; the moon is waxing if the angle is negative, and waning if positive}
 }
 
 Moon phase value should be interpreted like this:
-\itemize{
-  \item{0}{ : New Moon}
-  \item{}{Waxing Crescent}
-  \item{0.25}{ : First Quarter}
-  \item{}{ : Waxing Gibbous}
-  \item{0.5}{Full Moon}
-  \item{}{ : Waning Gibbous}
-  \item{0.75}{Last Quarter}
-  \item{}{ : Waning Crescent}
+\tabular{ll}{
+  0    \tab New Moon\cr
+       \tab Waxing Crescent\cr
+  0.25 \tab First Quarter\cr
+       \tab Waxing Gibbous\cr
+  0.5  \tab Full Moon\cr
+       \tab Waning Gibbous\cr
+  0.75 \tab Last Quarter\cr
+       \tab Waning Crescent\cr
+  1    \tab New Moon
 } 
 
 By subtracting the parallacticAngle from the angle one can get the zenith angle of the moons bright limb (anticlockwise). The zenith angle can be used do draw the moon shape from the observers perspective (e.g. moon lying on its back).
@@ -62,6 +63,10 @@ res <- getMoonIllumination(date = date_cet)
       
 }
 \seealso{
-\link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
-\link{getMoonPosition},\link{getSunlightPosition}
+Other suncalc functions:
+\code{\link[=getMoonPosition]{getMoonPosition()}},
+\code{\link[=getMoonTimes]{getMoonTimes()}},
+\code{\link[=getSunlightPosition]{getSunlightPosition()}},
+\code{\link[=getSunlightTimes]{getSunlightTimes()}}
 }
+\concept{suncalc functions}

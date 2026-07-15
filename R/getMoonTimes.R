@@ -1,12 +1,12 @@
 #' Get Moon times
 #' 
-#' @param date : \code{Date}. Single or multiple Date. YYYY-MM-DD
-#' @param lat : \code{numeric}. Single latitude
-#' @param lon : \code{numeric}. Single longitude
-#' @param data : \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
-#' @param keep : \code{character}. Vector of variables to keep. See \code{Details}
-#' @param tz : \code{character}. Timezone of results
-#' @param ... :Not used. (Maintenance only)
+#' @param date \code{Date}. Single or multiple Date. YYYY-MM-DD
+#' @param lat \code{numeric}. Single latitude
+#' @param lon \code{numeric}. Single longitude
+#' @param data \code{data.frame}. Alternative to use \code{date}, \code{lat}, \code{lon} for passing multiple coordinates
+#' @param keep \code{character}. Vector of variables to keep. See \code{Details}
+#' @param tz \code{character}. Timezone of results
+#' @param ... Not used. (Maintenance only)
 #' 
 #' @return \code{data.frame}
 #' 
@@ -14,11 +14,11 @@
 #' 
 #' Available variables are :
 #' 
-#' \itemize{
-#'   \item{"rise"}{ : \code{Date}. moonrise time}
-#'   \item{"set"}{ : \code{Date}. moonset time}
-#'   \item{"alwaysUp"}{ : \code{Logical}. TRUE if the moon never rises or sets and is always above the horizon during the day}
-#'   \item{"alwaysDown"}{ : \code{Logical}. TRUE if the moon is always below the horizon}
+#' \describe{
+#'   \item{"rise"}{\code{Date}. moonrise time}
+#'   \item{"set"}{\code{Date}. moonset time}
+#'   \item{"alwaysUp"}{\code{Logical}. TRUE if the moon never rises or sets and is always above the horizon during the day}
+#'   \item{"alwaysDown"}{\code{Logical}. TRUE if the moon is always below the horizon}
 #' }
 #' 
 #' @examples 
@@ -47,8 +47,7 @@
 #' 
 #' @export
 #' 
-#' @seealso \link{getSunlightTimes}, \link{getMoonTimes}, \link{getMoonIllumination},
-#' \link{getMoonPosition},\link{getSunlightPosition}
+#' @family suncalc functions
 #' 
 getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
                              keep = c("rise", "set", "alwaysUp", "alwaysDown"), 
