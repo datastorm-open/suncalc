@@ -1,3 +1,7 @@
+# suncalc 0.5.3 (2026-07-15)
+
+* Fix CRAN note
+
 # suncalc 0.5.2 (2023-11-02)
 
 * Fix getMoonTimes not keeping "rise" and "set"
