@@ -59,11 +59,11 @@ test_that("getSunlightTimes doesn't depend on the system time zone", {
 })
 
 test_that("getSunlightTimes returns NA when the sun doesn't reach the altitude (#13)", {
-  skip_if_tz_unavailable(c("America/Edmonton", "Europe/Berlin"))
+  skip_if_tz_unavailable(c("America/Denver", "Europe/Berlin"))
 
   # Edmonton : sun only 15.75 degrees below the horizon at nadir, no astronomical night
   res <- getSunlightTimes(date = as.Date("2018-05-24"), lat = 53.53043, lon = -113.51,
-                          keep = c("dusk", "night", "nightEnd", "dawn", "nadir"), tz = "America/Edmonton")
+                          keep = c("dusk", "night", "nightEnd", "dawn", "nadir"), tz = "America/Denver")
   expect_true(is.na(res$night))
   expect_true(is.na(res$nightEnd))
   expect_false(is.na(res$dusk))
