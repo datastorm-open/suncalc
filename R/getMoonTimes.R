@@ -117,7 +117,10 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
           function(x){
             col_names <- intersect(colnames(data), c("rise", "set"))[x]
             data[is_inf[col == x, row], c(col_names) := data_inf[is_inf[col == x, id_row], get(col_names)]]
-            data[is_inf[col == x, row] & as.Date(get(col_names), tz = tz) != date, c(col_names) := NA]
+            # typed NA : a logical NA would replace the whole POSIXct column when all rows are selected
+            rows_na <- is_inf[col == x, row]
+            rows_na <- rows_na[which(as.Date(data[[col_names]][rows_na], tz = tz) != data$date[rows_na])]
+            data[rows_na, c(col_names) := data[[col_names]][NA_integer_]]
           }
         )
       })
@@ -155,7 +158,10 @@ getMoonTimes <- function(date = NULL, lat = NULL, lon = NULL, data = NULL,
           function(x){
             col_names <- intersect(colnames(data), c("rise", "set"))[x]
             data[is_sup[col == x, row], c(col_names) := data_sup[is_sup[col == x, id_row], get(col_names)]]
-            data[is_sup[col == x, row] & as.Date(get(col_names), tz = tz) != date, c(col_names) := NA]
+            # typed NA : a logical NA would replace the whole POSIXct column when all rows are selected
+            rows_na <- is_sup[col == x, row]
+            rows_na <- rows_na[which(as.Date(data[[col_names]][rows_na], tz = tz) != data$date[rows_na])]
+            data[rows_na, c(col_names) := data[[col_names]][NA_integer_]]
           }
         )
       })
