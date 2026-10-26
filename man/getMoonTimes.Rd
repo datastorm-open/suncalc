@@ -44,6 +44,10 @@ Available variables are :
   \item{"alwaysUp"}{\code{Logical}. TRUE if the moon never rises or sets and is always above the horizon during the day}
   \item{"alwaysDown"}{\code{Logical}. TRUE if the moon is always below the horizon}
 }
+
+Times are given for the requested day in \code{tz} (from 00:00 to 24:00).
+\code{rise} / \code{set} are \code{NA} when the moon doesn't rise / set this day
+(about once a month, as moonrise and moonset are about 50 minutes later each day).
 }
 \examples{
 
