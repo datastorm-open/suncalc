@@ -66,12 +66,12 @@ Times are given for the requested day in \code{tz} (from 00:00 to 24:00).
 \examples{
 
 # one date
-getSunlightTimes(date = Sys.Date(), lat = 50.1, lon = 1.83, tz = "CET")
+getSunlightTimes(date = Sys.Date(), lat = 50.1, lon = 1.83, tz = "Europe/Paris")
 
 # multiple date + subset
 getSunlightTimes(date = seq.Date(Sys.Date()-9, Sys.Date(), by = 1), 
   keep = c("sunrise", "sunriseEnd", "sunset", "sunsetStart"), 
-  lat = 50.1, lon = 1.83, tz = "CET")
+  lat = 50.1, lon = 1.83, tz = "Europe/Paris")
   
 # multiple coordinates
 data <- data.frame(date = seq.Date(Sys.Date()-9, Sys.Date(), by = 1), 
@@ -79,7 +79,7 @@ data <- data.frame(date = seq.Date(Sys.Date()-9, Sys.Date(), by = 1),
     lon = c(rep(1.83, 10), rep(2, 10)))
     
 getSunlightTimes(data = data, 
-  keep = c("sunrise", "sunriseEnd", "sunset", "sunsetStart"), tz = "CET")
+  keep = c("sunrise", "sunriseEnd", "sunset", "sunsetStart"), tz = "Europe/Paris")
       
 }
 \seealso{

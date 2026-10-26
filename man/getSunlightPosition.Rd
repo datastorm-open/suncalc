@@ -50,7 +50,7 @@ getSunlightPosition(date = c("2017-05-12", "2017-05-12 00:00:00"),
 # in POSIXct
 getSunlightPosition(date = as.POSIXct("2017-05-12 00:00:00", tz = "UTC"),
     lat = 50.1, lon = 1.83)
-getSunlightPosition(date = as.POSIXct("2017-05-12 02:00:00", tz = "CET"),
+getSunlightPosition(date = as.POSIXct("2017-05-12 02:00:00", tz = "Europe/Paris"),
     lat = 50.1, lon = 1.83)
 
 # multiple date + subset

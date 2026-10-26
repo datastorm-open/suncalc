@@ -54,11 +54,11 @@ getMoonIllumination(date = c("2017-05-12", "2017-05-12 00:00:00"),
 
 # in POSIXct
 getMoonIllumination(date = as.POSIXct("2017-05-12 00:00:00", tz = "UTC"))
-getMoonIllumination(date = as.POSIXct("2017-05-12 02:00:00", tz = "CET"))
+getMoonIllumination(date = as.POSIXct("2017-05-12 02:00:00", tz = "Europe/Paris"))
 
 date <- seq(ISOdate(2009,1,1), ISOdate(2010,1,1), "hours")
 date_cet <- date
-attr(date_cet, "tzone") <- "CET"
+attr(date_cet, "tzone") <- "Europe/Paris"
 res <- getMoonIllumination(date = date_cet)
       
 }

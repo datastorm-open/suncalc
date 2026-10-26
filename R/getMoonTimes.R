@@ -28,19 +28,19 @@
 #' @examples 
 #' 
 #' # one date
-#' getMoonTimes(date = Sys.Date(), lat = 47.21, lon = -1.557, tz = "CET")
+#' getMoonTimes(date = Sys.Date(), lat = 47.21, lon = -1.557, tz = "Europe/Paris")
 #' 
 #' # multiple date + subset
 #' getMoonTimes(date = seq.Date(Sys.Date()-9, Sys.Date(), by = 1), 
 #'   keep = c("rise", "set", "alwaysUp"), 
-#'   lat = 47.21, lon = -1.557, tz = "CET")
+#'   lat = 47.21, lon = -1.557, tz = "Europe/Paris")
 #'   
 #' # multiple coordinates
 #' data <- data.frame(date = seq.Date(Sys.Date()-9, Sys.Date(), by = 1), 
 #'     lat = c(rep(50.1, 10), rep(49, 10)), 
 #'     lon = c(rep(1.83, 10), rep(2, 10)))
 #'     
-#' getMoonTimes(data = data, tz = "CET")
+#' getMoonTimes(data = data, tz = "Europe/Paris")
 #'       
 #' @rawNamespace import(data.table, except = hour)
 #' @import magrittr 
