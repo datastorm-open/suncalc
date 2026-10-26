@@ -45,4 +45,3 @@
   request_date
 }
 
-utils::globalVariables(c("id_row"))

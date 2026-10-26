@@ -53,6 +53,15 @@ Available variables are :
   \item{"nauticalDawn"}{nautical dawn (morning nautical twilight starts)}
   \item{"dawn"}{dawn (morning nautical twilight ends, morning civil twilight starts)}
 }
+
+Times are given for the requested day in \code{tz} (from 00:00 to 24:00).
+\code{NA} is returned when the event does not occur this day :
+\itemize{
+  \item the sun doesn't reach the corresponding altitude, e.g. no \code{night} / \code{nightEnd}
+  (sun never 18 degrees below the horizon) during summer at high latitudes,
+  no \code{sunrise} / \code{sunset} during polar day or polar night
+  \item the event happens just before midnight the previous day and just after midnight the next day
+}
 }
 \examples{
 

@@ -162,7 +162,51 @@
   return(result)
 }
 
+# calls fun (.getTimes or .getMoonTimes) at 12:00 UTC of 'date', and keeps for each of 'vars'
+# the time which is in the requested day in 'tz' :
+# - values before the day are recomputed with date + 1 / + 2, values after the day with
+#   date - 1 / - 2, NA with date + 1 / - 1, only for the rows concerned (+/- 2 days are needed
+#   when 'tz' is far from the solar time, e.g. UTC+14 at lon -157)
+# - values still outside the day are set to NA (no event this day in 'tz')
+.timesInDay <- function(fun, date, lat, lon, tz, vars) {
 
+  # local midnights ("boundary" : first instant of the day when midnight is skipped by DST)
+  day_start <- as.numeric(lubridate::force_tz(lubridate::as_datetime(date), tz, roll_dst = "boundary"))
+  day_end <- as.numeric(lubridate::force_tz(lubridate::as_datetime(date + 1), tz, roll_dst = "boundary"))
+  in_day <- function(x, rows) {
+    x <- as.numeric(x)
+    !is.na(x) & x >= day_start[rows] & x < day_end[rows]
+  }
+  noon_utc <- function(d) lubridate::as_datetime(d) + 12 * 3600
+
+  all_rows <- seq_along(date)
+  res <- fun(noon_utc(date), lat, lon)
+
+  for (shift in c(1, -1, 2, -2)) {
+    to_search <- function(x) {
+      x <- as.numeric(x)
+      out <- if (shift > 0) x < day_start else x >= day_end
+      # NA (no event, frequent at high latitudes) : only searched in the adjacent days
+      out[is.na(x)] <- abs(shift) == 1
+      out
+    }
+    rows <- which(Reduce(`|`, lapply(vars, function(v) to_search(res[[v]])), FALSE))
+    if (length(rows) == 0) next
+
+    res_shift <- fun(noon_utc(date[rows] + shift), lat[rows], lon[rows])
+    for (v in vars) {
+      repl <- !in_day(res[[v]][rows], rows) & in_day(res_shift[[v]], rows)
+      res[[v]][rows[repl]] <- res_shift[[v]][repl]
+    }
+  }
+
+  for (v in vars) {
+    res[[v]][!in_day(res[[v]], all_rows)] <- NA
+    attr(res[[v]], "tzone") <- tz
+  }
+
+  res
+}
 
 
 # moon calculations, based on http:#aa.quae.nl/en/reken/hemelpositie.html formulas

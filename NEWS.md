@@ -1,3 +1,12 @@
+# suncalc 0.5.4 (2026-10-26)
+
+* Fix getMoonTimes error (and logical rise/set columns) for a single date when the moon does not rise or set that day
+* getSunlightTimes & getMoonTimes : times are always within the requested day in `tz`, NA if the event doesn't occur this day. Fix remaining cases around midnight, on DST changes at midnight and when `tz` is far from the solar time (#2)
+* getSunlightTimes & getMoonTimes : much faster (about x20 on large data)
+* Document NA values in getSunlightTimes (sun not reaching the altitude, e.g. no `night` in summer at high latitudes) (#13)
+* Add unit tests (testthat)
+* lubridate >= 1.9.0 required
+
 # suncalc 0.5.3 (2026-07-15)
 
 * Fix CRAN note

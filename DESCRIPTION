@@ -1,5 +1,5 @@
 Package: suncalc
-Version: 0.5.3
+Version: 0.5.4
 Title: Compute Sun Position, Sunlight Phases, Moon Position and Lunar Phase
 Authors@R: c(
     person("Benoit", "Thieurmel", role = c("aut", "cre"),
@@ -13,10 +13,13 @@ Description: Get sun position, sunlight phases (times for sunrise, sunset, dusk,
         <https://www.aa.quae.nl/en/reken/zonpositie.html>.
 Imports: 
     data.table,
-    lubridate,
+    lubridate (>= 1.9.0),
     magrittr
+Suggests:
+    testthat (>= 3.0.0)
 License: GPL-2 | file LICENSE
 URL: https://github.com/datastorm-open/suncalc
 NeedsCompilation: no
 Encoding: UTF-8
 Config/roxygen2/version: 8.0.0
+Config/testthat/edition: 3
